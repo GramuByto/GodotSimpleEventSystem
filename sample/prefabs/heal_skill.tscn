@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://vjuunvs5l6kn"]
+
+[ext_resource type="PackedScene" uid="uid://c17jytfrt8vhk" path="res://sample/prefabs/skill.tscn" id="1_j4pnd"]
+[ext_resource type="AudioStream" uid="uid://bhqweo3nat5jf" path="res://sample/audio/UIMisc_Feedback 36 up_CB Sounddesign_ACTIVATION2.wav" id="2_644ak"]
+[ext_resource type="PackedScene" uid="uid://b4pvsugi213uw" path="res://sample/vfx/heal_vfx.tscn" id="4_gpjq8"]
+[ext_resource type="Script" path="res://sample/scripts/skills/effects/health_effect_script.gd" id="4_k7gsq"]
+
+[node name="HealSkill" instance=ExtResource("1_j4pnd")]
+
+[node name="OnActivateSkill" parent="." index="0" node_paths=PackedStringArray("_node", "_callable_nodes")]
+_node = NodePath("../GPUParticles3D")
+_type_name = "GPUParticles3D"
+_function_name = "restart()"
+_callable_nodes = [NodePath("../GPUParticles3D"), NodePath("../SkillSFX")]
+_callable_values = [["GPUParticles3D", "restart()", []], ["AudioStreamPlayer", "play(from_position)", []]]
+
+[node name="SkillSFX" parent="." index="1"]
+stream = ExtResource("2_644ak")
+
+[node name="GPUParticles3D" parent="." index="2" instance=ExtResource("4_gpjq8")]
+
+[node name="Timer" type="Timer" parent="." index="3"]
+one_shot = true
+
+[node name="Area3D" parent="." index="4"]
+script = ExtResource("4_k7gsq")
+heal = 5

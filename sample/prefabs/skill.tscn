@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://c17jytfrt8vhk"]
+
+[ext_resource type="Script" path="res://sample/scripts/skills/skill_script.gd" id="1_qkjxg"]
+[ext_resource type="Script" path="res://addons/simple_event_system/simple_event_system.gd" id="2_kav2x"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_jyjnp"]
+
+[node name="Skill" type="Node3D" node_paths=PackedStringArray("OnActivateSkill")]
+script = ExtResource("1_qkjxg")
+OnActivateSkill = NodePath("OnActivateSkill")
+
+[node name="OnActivateSkill" type="Node" parent="."]
+script = ExtResource("2_kav2x")
+
+[node name="SkillSFX" type="AudioStreamPlayer" parent="."]
+
+[node name="Area3D" type="Area3D" parent="." groups=["skill"]]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_jyjnp")
+
+[connection signal="area_entered" from="Area3D" to="Area3D" method="_on_area_entered"]

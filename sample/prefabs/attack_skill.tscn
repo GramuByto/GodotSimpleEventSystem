@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://bl8t0fomcdxtu"]
+
+[ext_resource type="PackedScene" uid="uid://c17jytfrt8vhk" path="res://sample/prefabs/skill.tscn" id="1_hrmq0"]
+[ext_resource type="AudioStream" uid="uid://1trepfapjvc7" path="res://sample/audio/Noise_Punch_006.wav" id="3_nmrt7"]
+[ext_resource type="PackedScene" uid="uid://dfl3gxe07ygj1" path="res://sample/vfx/hit_vfx.tscn" id="4_dh8oc"]
+[ext_resource type="Script" path="res://sample/scripts/skills/effects/damage_effect_script.gd" id="4_yuclr"]
+
+[node name="AttackSkill" instance=ExtResource("1_hrmq0")]
+
+[node name="OnActivateSkill" parent="." index="0" node_paths=PackedStringArray("_node", "_callable_nodes")]
+_node = NodePath("../SkillSFX")
+_type_name = "AudioStreamPlayer"
+_function_name = "play(from_position)"
+_args = [0.98]
+_callable_nodes = [NodePath("../SkillSFX"), NodePath("../Vfx")]
+_callable_values = [["AudioStreamPlayer", "play(from_position)", [0.98]], ["GPUParticles3D", "restart()", []]]
+
+[node name="Vfx" parent="." index="1" instance=ExtResource("4_dh8oc")]
+
+[node name="SkillSFX" parent="." index="2"]
+stream = ExtResource("3_nmrt7")
+
+[node name="Area3D" parent="." index="3"]
+script = ExtResource("4_yuclr")
+damage = 2

@@ -1,0 +1,99 @@
+[gd_scene load_steps=9 format=3 uid="uid://ctioaeyurjvg2"]
+
+[ext_resource type="PackedScene" uid="uid://dvr2val5qh6cl" path="res://sample/prefabs/target_dummy.tscn" id="1_2j7ct"]
+[ext_resource type="Script" path="res://sample/scripts/skills/skill_spawner.gd" id="2_6on70"]
+[ext_resource type="Script" path="res://sample/scripts/button_script.gd" id="3_kfq8g"]
+[ext_resource type="Script" path="res://addons/simple_event_system/simple_event_system.gd" id="4_bf6pc"]
+[ext_resource type="PackedScene" uid="uid://bl8t0fomcdxtu" path="res://sample/prefabs/attack_skill.tscn" id="5_ccmra"]
+[ext_resource type="PackedScene" uid="uid://vjuunvs5l6kn" path="res://sample/prefabs/heal_skill.tscn" id="6_yv1dp"]
+[ext_resource type="PackedScene" uid="uid://tsehej47jakl" path="res://sample/prefabs/fire_skill.tscn" id="7_0ovjw"]
+
+[sub_resource type="Environment" id="Environment_5ta41"]
+background_mode = 1
+background_color = Color(0.321569, 0.360784, 0.552941, 1)
+background_energy_multiplier = 2.5
+
+[node name="Demo" type="Node3D"]
+
+[node name="Environment" type="Node" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_5ta41")
+
+[node name="target_dummy" parent="." instance=ExtResource("1_2j7ct")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.936059, 0.124941, -0.328911, 0, 0.934826, 0.355107, 0.351842, 0.332401, -0.875053, -0.616919, 1.52486, -1.76352)
+
+[node name="SkillSpawner" type="Node" parent="."]
+script = ExtResource("2_6on70")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -83.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="AttackButton" type="Button" parent="CanvasLayer/HBoxContainer" node_paths=PackedStringArray("OnButtonPress")]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Attack"
+script = ExtResource("3_kfq8g")
+OnButtonPress = NodePath("OnButtonPress")
+
+[node name="OnButtonPress" type="Node" parent="CanvasLayer/HBoxContainer/AttackButton" node_paths=PackedStringArray("_node", "_callable_nodes")]
+script = ExtResource("4_bf6pc")
+_node = NodePath("../../../../SkillSpawner")
+_type_name = "skill_spawner.gd"
+_function_name = "spawnNode(node,spawnPosition)"
+_args = [ExtResource("5_ccmra"), Vector3(0, 1.25, 0)]
+_show_raw_data = true
+_callable_nodes = [NodePath("../../../../SkillSpawner")]
+_callable_values = [["skill_spawner.gd", "spawnNode(node,spawnPosition)", [ExtResource("5_ccmra"), Vector3(0, 1.25, 0)]]]
+
+[node name="HealButton" type="Button" parent="CanvasLayer/HBoxContainer" node_paths=PackedStringArray("OnButtonPress")]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Heal"
+script = ExtResource("3_kfq8g")
+OnButtonPress = NodePath("OnButtonPress")
+
+[node name="OnButtonPress" type="Node" parent="CanvasLayer/HBoxContainer/HealButton" node_paths=PackedStringArray("_node", "_callable_nodes")]
+script = ExtResource("4_bf6pc")
+_node = NodePath("../../../../SkillSpawner")
+_type_name = "skill_spawner.gd"
+_function_name = "spawnNode(node,spawnPosition)"
+_args = [ExtResource("6_yv1dp"), Vector3(0, 1.25, 0)]
+_show_raw_data = true
+_callable_nodes = [NodePath("../../../../SkillSpawner")]
+_callable_values = [["skill_spawner.gd", "spawnNode(node,spawnPosition)", [ExtResource("6_yv1dp"), Vector3(0, 1.25, 0)]]]
+
+[node name="FireButton" type="Button" parent="CanvasLayer/HBoxContainer" node_paths=PackedStringArray("OnButtonPress")]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Fire"
+script = ExtResource("3_kfq8g")
+OnButtonPress = NodePath("OnButtonPress")
+
+[node name="OnButtonPress" type="Node" parent="CanvasLayer/HBoxContainer/FireButton" node_paths=PackedStringArray("_node", "_callable_nodes")]
+script = ExtResource("4_bf6pc")
+_node = NodePath("../../../../SkillSpawner")
+_type_name = "skill_spawner.gd"
+_function_name = "spawnNode(node,spawnPosition)"
+_args = [ExtResource("7_0ovjw"), Vector3(0, 1.25, 0)]
+_callable_nodes = [NodePath("../../../../SkillSpawner")]
+_callable_values = [["skill_spawner.gd", "spawnNode(node,spawnPosition)", [ExtResource("7_0ovjw"), Vector3(0, 1.25, 0)]]]
+
+[connection signal="pressed" from="CanvasLayer/HBoxContainer/AttackButton" to="CanvasLayer/HBoxContainer/AttackButton" method="_on_pressed"]
+[connection signal="pressed" from="CanvasLayer/HBoxContainer/HealButton" to="CanvasLayer/HBoxContainer/HealButton" method="_on_pressed"]
+[connection signal="pressed" from="CanvasLayer/HBoxContainer/FireButton" to="CanvasLayer/HBoxContainer/FireButton" method="_on_pressed"]

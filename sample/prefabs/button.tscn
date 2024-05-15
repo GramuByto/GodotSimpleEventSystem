@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://hvskk3cjeyu0"]
+
+[ext_resource type="Script" path="res://sample/scripts/button_script.gd" id="1_m10w3"]
+[ext_resource type="Script" path="res://addons/simple_event_system/simple_event.gd" id="2_s3j3k"]
+
+[node name="Button" type="Button" node_paths=PackedStringArray("OnButtonPress")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Sample Text"
+script = ExtResource("1_m10w3")
+OnButtonPress = NodePath("OnButtonPress")
+
+[node name="OnButtonPress" type="Node" parent="."]
+script = ExtResource("2_s3j3k")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

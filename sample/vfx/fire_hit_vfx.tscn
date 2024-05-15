@@ -1,0 +1,70 @@
+[gd_scene load_steps=14 format=3 uid="uid://barh3htdhsw5n"]
+
+[ext_resource type="Shader" uid="uid://ck6lgosjtljik" path="res://sample/vfx/simple_shader.tres" id="1_44354"]
+[ext_resource type="Texture2D" uid="uid://b0y4m1hkn8i2s" path="res://sample/vfx/textures/Hit_Texture.png" id="2_1wiym"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h8ti0"]
+render_priority = 0
+shader = ExtResource("1_44354")
+shader_parameter/Hit_Texture = ExtResource("2_1wiym")
+
+[sub_resource type="Curve" id="Curve_3avt0"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.28134, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_cp0xh"]
+curve = SubResource("Curve_3avt0")
+
+[sub_resource type="Gradient" id="Gradient_k6v17"]
+offsets = PackedFloat32Array(0.0628931, 0.767296)
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0.321569, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1ahd2"]
+gradient = SubResource("Gradient_k6v17")
+
+[sub_resource type="Gradient" id="Gradient_8di5f"]
+colors = PackedColorArray(1, 0.6, 0, 1, 18.571, 6.429, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_l4og4"]
+gradient = SubResource("Gradient_8di5f")
+use_hdr = true
+
+[sub_resource type="Curve" id="Curve_6s1e5"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1e-05, 1), 0.0, 0.0, 0, 0, Vector2(0.369436, 0), -11.5766, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_46t15"]
+curve = SubResource("Curve_6s1e5")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yyw3m"]
+lifetime_randomness = 1.0
+particle_flag_align_y = true
+angle_min = -720.0
+angle_max = 720.0
+inherit_velocity_ratio = 1.0
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 2.3
+initial_velocity_max = 5.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_46t15")
+color_ramp = SubResource("GradientTexture1D_l4og4")
+color_initial_ramp = SubResource("GradientTexture1D_1ahd2")
+alpha_curve = SubResource("CurveTexture_cp0xh")
+turbulence_noise_strength = 14.59
+
+[sub_resource type="QuadMesh" id="QuadMesh_fd8gx"]
+size = Vector2(0.5, 1)
+
+[node name="GPUParticles3D" type="GPUParticles3D"]
+material_override = SubResource("ShaderMaterial_h8ti0")
+emitting = false
+amount = 50
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+transform_align = 2
+process_material = SubResource("ParticleProcessMaterial_yyw3m")
+draw_pass_1 = SubResource("QuadMesh_fd8gx")
