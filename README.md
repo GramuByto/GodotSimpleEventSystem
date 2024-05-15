@@ -10,11 +10,13 @@ Add a child node and search for SimpleEventSystem (Simply searching 'event' will
 
 ![image](https://github.com/GramuByto/GodotSimpleEventSystem/assets/64369270/3e878036-678f-4ca4-988a-80ec9e8788bf)
 
-After adding a callable, assign the node where you want a function to be called and apply the values leading to that function
+After adding a callable, assign the node where you want a function to be called and apply the values leading to that function. Arguments will show in the Args array variable and will change type if functions have static typing on their parameters.
 
 ![image](https://github.com/GramuByto/GodotSimpleEventSystem/assets/64369270/c47a46e0-6812-4718-92f6-d45078471a24)
 
-Arguments will show in the Args array variable and will change type if functions have static typing on their parameters.
+Export the variable with a static type of SimpleEventSystem. Call the invoke function to call all the callables.
+
+![image](https://github.com/GramuByto/GodotSimpleEventSystem/assets/64369270/78c84be6-7fe1-4168-a410-491afe476edf)
 
 ---
 
@@ -34,6 +36,8 @@ Add a function
 Assign the node where you want a function to be called and apply the values leading to that function
 
 ![image](https://github.com/GramuByto/GodotSimpleEventSystem/assets/64369270/3f04e39b-307f-4506-b6c3-8542e1539d0b)
+
+To run the functions, it's similar to the SimpleEventSystem but change the static type to SimpleEvent
 
 ---
 
