@@ -10,7 +10,7 @@ Add a child node and search for SimpleEventSystem (Simply searching 'event' will
 
 ![image](https://github.com/GramuByto/GodotSimpleEventSystem/assets/64369270/3e878036-678f-4ca4-988a-80ec9e8788bf)
 
-After adding a listener, assign the node where you want a function to be called and apply the values leading to that function
+After adding a callable, assign the node where you want a function to be called and apply the values leading to that function
 
 ![image](https://github.com/GramuByto/GodotSimpleEventSystem/assets/64369270/c47a46e0-6812-4718-92f6-d45078471a24)
 
@@ -24,6 +24,7 @@ This is an older iteration but it still works. The main difference is that addin
 ![image](https://github.com/GramuByto/GodotSimpleEventSystem/assets/64369270/33180ca8-e3e8-43a5-90bd-0cf225601c1d)
 
 Add a child node and search for SimpleEvent
+
 ![image](https://github.com/GramuByto/GodotSimpleEventSystem/assets/64369270/7a0d67f3-519c-4ce4-8917-a33468b5500b)
 
 Add a function
@@ -39,4 +40,4 @@ Assign the node where you want a function to be called and apply the values lead
 # Limitations
 Any changes  in the Event System Node, using the SimpleEventSystem node and note the SimpleEvent node, from the parent will not reflect properly on the child node. Worst, it could break the child node's Event System.
 
-It can only currently apply static listeners and does not have dynamic listeners.
+It can only currently apply static callables and does not have dynamic callables.
