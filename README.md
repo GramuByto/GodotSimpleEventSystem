@@ -1,4 +1,4 @@
-# <img src="addons/simple_event_system/listener_icon.png" width="48" height="48"> SimpleEventSystem
+# <img src="addons/simple_event_system/listener_icon.png" width="24" height="24"> SimpleEventSystem
 An simple addon for Godot 4.0 (Work well with [Godot 4.2](https://godotengine.org/download/archive/4.2-stable/))
 
 Create sequences of events in nodes themselves.
