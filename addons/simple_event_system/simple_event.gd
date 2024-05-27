@@ -16,19 +16,26 @@ var text: RichTextLabel
 @export var add_function_button: String	#This will be replaced by a button
 
 @export_subgroup("Extra Properties")
-@export var refresh_time: int = 0
+@export var refresh_time: float = 0
 
 func invoke():
 	for child in get_children():
 		(child as SimpleEventFunction).invoke()
 
+func _init():
+	self.set_display_folded(true);
+
 #Check if functions still exists
 func _process(delta):
-	refresh_time = refresh_time + delta
+	refresh_time += delta
 	
 	if refresh_time < 0.1:
 		return
 	refresh_time = 0
+
+	if !Engine.is_editor_hint():
+		process_mode = Node.PROCESS_MODE_DISABLED
+		return
 	
 	var has_changes = false;
 	

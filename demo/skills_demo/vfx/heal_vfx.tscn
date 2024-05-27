@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://b4pvsugi213uw"]
 
-[ext_resource type="Shader" uid="uid://babonita1rm0r" path="res://sample/vfx/static_shader.tres" id="1_edmao"]
-[ext_resource type="Texture2D" uid="uid://dnqgn6yjjyknx" path="res://sample/vfx/textures/Cross_Texture.png" id="2_u4icc"]
+[ext_resource type="Shader" uid="uid://babonita1rm0r" path="res://demo/skills_demo/vfx/static_shader.tres" id="1_edmao"]
+[ext_resource type="Texture2D" uid="uid://dnqgn6yjjyknx" path="res://demo/skills_demo/vfx/textures/Cross_Texture.png" id="2_u4icc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h8ti0"]
 render_priority = 0

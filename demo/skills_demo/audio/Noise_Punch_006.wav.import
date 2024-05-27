@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://1trepfapjvc7"
-path="res://.godot/imported/Noise_Punch_006.wav-f16740963e5b5c7dc2b1b38075d77af8.sample"
+path="res://.godot/imported/Noise_Punch_006.wav-3f3cc80f9f113bb10e44e2ca4b6212e4.sample"
 
 [deps]
 
-source_file="res://sample/audio/Noise_Punch_006.wav"
-dest_files=["res://.godot/imported/Noise_Punch_006.wav-f16740963e5b5c7dc2b1b38075d77af8.sample"]
+source_file="res://demo/skills_demo/audio/Noise_Punch_006.wav"
+dest_files=["res://.godot/imported/Noise_Punch_006.wav-3f3cc80f9f113bb10e44e2ca4b6212e4.sample"]
 
 [params]
 

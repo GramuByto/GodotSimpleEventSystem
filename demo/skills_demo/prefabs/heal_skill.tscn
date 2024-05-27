@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://vjuunvs5l6kn"]
 
-[ext_resource type="PackedScene" uid="uid://c17jytfrt8vhk" path="res://sample/prefabs/skill.tscn" id="1_j4pnd"]
-[ext_resource type="AudioStream" uid="uid://bhqweo3nat5jf" path="res://sample/audio/UIMisc_Feedback 36 up_CB Sounddesign_ACTIVATION2.wav" id="2_644ak"]
-[ext_resource type="PackedScene" uid="uid://b4pvsugi213uw" path="res://sample/vfx/heal_vfx.tscn" id="4_gpjq8"]
-[ext_resource type="Script" path="res://sample/scripts/skills/effects/health_effect_script.gd" id="4_k7gsq"]
+[ext_resource type="PackedScene" uid="uid://c17jytfrt8vhk" path="res://demo/skills_demo/prefabs/skill.tscn" id="1_j4pnd"]
+[ext_resource type="AudioStream" uid="uid://bhqweo3nat5jf" path="res://demo/skills_demo/audio/UIMisc_Feedback 36 up_CB Sounddesign_ACTIVATION2.wav" id="2_644ak"]
+[ext_resource type="PackedScene" uid="uid://b4pvsugi213uw" path="res://demo/skills_demo/vfx/heal_vfx.tscn" id="4_gpjq8"]
+[ext_resource type="Script" path="res://demo/skills_demo/scripts/skills/effects/health_effect_script.gd" id="4_k7gsq"]
 
 [node name="HealSkill" instance=ExtResource("1_j4pnd")]
 

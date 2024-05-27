@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://8c3p35jpkeab"]
+
+[ext_resource type="Script" path="res://demo/performance_demo/scripts/performance_script.gd" id="1_v6ki6"]
+[ext_resource type="Script" path="res://addons/simple_event_system/simple_event_system.gd" id="1_yukte"]
+
+[node name="NodeDemo" type="Node" node_paths=PackedStringArray("simple_event")]
+script = ExtResource("1_v6ki6")
+simple_event = NodePath("SimpleEventSystem")
+
+[node name="SimpleEventSystem" type="Node" parent="." node_paths=PackedStringArray("_node", "_callable_nodes")]
+script = ExtResource("1_yukte")
+_node = NodePath("..")
+_type_name = "performance_script.gd"
+_function_name = "call_this()"
+_callable_nodes = [NodePath("..")]
+_callable_values = [["performance_script.gd", "call_this()", []]]

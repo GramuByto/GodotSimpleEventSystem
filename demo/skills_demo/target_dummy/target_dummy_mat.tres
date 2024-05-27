@@ -1,6 +1,6 @@
 [gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://6jgi1gmjq6ha"]
 
-[ext_resource type="Texture2D" uid="uid://b5sv4qp3c4iu6" path="res://sample/target_dummy/training_dummy.png" id="1_2fk1d"]
+[ext_resource type="Texture2D" uid="uid://b5sv4qp3c4iu6" path="res://demo/skills_demo/target_dummy/training_dummy.png" id="1_2fk1d"]
 
 [resource]
 diffuse_mode = 3

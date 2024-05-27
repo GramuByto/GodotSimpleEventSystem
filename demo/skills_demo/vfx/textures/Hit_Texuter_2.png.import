@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b5sv4qp3c4iu6"
-path.s3tc="res://.godot/imported/training_dummy.png-97e9f26cb468d1bc7db8dc46e870ff1c.s3tc.ctex"
+uid="uid://1v15np1niwy3"
+path.s3tc="res://.godot/imported/Hit_Texuter_2.png-27b206cb74a624aa3e088111d9c7de7a.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://sample/target_dummy/training_dummy.png"
-dest_files=["res://.godot/imported/training_dummy.png-97e9f26cb468d1bc7db8dc46e870ff1c.s3tc.ctex"]
+source_file="res://demo/skills_demo/vfx/textures/Hit_Texuter_2.png"
+dest_files=["res://.godot/imported/Hit_Texuter_2.png-27b206cb74a624aa3e088111d9c7de7a.s3tc.ctex"]
 
 [params]
 

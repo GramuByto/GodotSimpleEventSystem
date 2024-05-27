@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b0y4m1hkn8i2s"
-path.s3tc="res://.godot/imported/Hit_Texture.png-293463158788f681a7e6720307a75473.s3tc.ctex"
+path.s3tc="res://.godot/imported/Hit_Texture.png-3d88986c0d87e75cd113726041cb2dae.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://sample/vfx/textures/Hit_Texture.png"
-dest_files=["res://.godot/imported/Hit_Texture.png-293463158788f681a7e6720307a75473.s3tc.ctex"]
+source_file="res://demo/skills_demo/vfx/textures/Hit_Texture.png"
+dest_files=["res://.godot/imported/Hit_Texture.png-3d88986c0d87e75cd113726041cb2dae.s3tc.ctex"]
 
 [params]
 

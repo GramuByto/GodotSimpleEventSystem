@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://c17jytfrt8vhk"]
 
-[ext_resource type="Script" path="res://sample/scripts/skills/skill_script.gd" id="1_qkjxg"]
+[ext_resource type="Script" path="res://demo/skills_demo/scripts/skills/skill_script.gd" id="1_qkjxg"]
 [ext_resource type="Script" path="res://addons/simple_event_system/simple_event_system.gd" id="2_kav2x"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jyjnp"]

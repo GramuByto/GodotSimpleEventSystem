@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bl8t0fomcdxtu"]
 
-[ext_resource type="PackedScene" uid="uid://c17jytfrt8vhk" path="res://sample/prefabs/skill.tscn" id="1_hrmq0"]
-[ext_resource type="AudioStream" uid="uid://1trepfapjvc7" path="res://sample/audio/Noise_Punch_006.wav" id="3_nmrt7"]
-[ext_resource type="PackedScene" uid="uid://dfl3gxe07ygj1" path="res://sample/vfx/hit_vfx.tscn" id="4_dh8oc"]
-[ext_resource type="Script" path="res://sample/scripts/skills/effects/damage_effect_script.gd" id="4_yuclr"]
+[ext_resource type="PackedScene" uid="uid://c17jytfrt8vhk" path="res://demo/skills_demo/prefabs/skill.tscn" id="1_hrmq0"]
+[ext_resource type="AudioStream" uid="uid://1trepfapjvc7" path="res://demo/skills_demo/audio/Noise_Punch_006.wav" id="3_nmrt7"]
+[ext_resource type="PackedScene" uid="uid://dfl3gxe07ygj1" path="res://demo/skills_demo/vfx/hit_vfx.tscn" id="4_dh8oc"]
+[ext_resource type="Script" path="res://demo/skills_demo/scripts/skills/effects/damage_effect_script.gd" id="4_yuclr"]
 
 [node name="AttackSkill" instance=ExtResource("1_hrmq0")]
 

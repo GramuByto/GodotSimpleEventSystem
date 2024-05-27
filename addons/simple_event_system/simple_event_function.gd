@@ -5,12 +5,13 @@ class_name SimpleEventFunction
 @export var node: Node:
 	set(val):
 		node = val
-		notify_property_list_changed() #refreshing will select the node put in here
-		var editor_selection = EditorInterface.get_selection()
+		if Engine.is_editor_hint():
+			notify_property_list_changed() #refreshing will select the node put in here
+			var editor_selection = EditorInterface.get_selection()
 
-		editor_selection.clear()
-		editor_selection.add_node(self)	#reselect this node
-		
+			editor_selection.clear()
+			editor_selection.add_node(self)	#reselect this node
+
 @export var type_name:String = ''
 @export var function_name:String = ''
 
@@ -43,7 +44,7 @@ func get_all_node_types():
 		
 		var node_class = node.get_class()
 
-        # Traverse up the inheritance hierarchy until reaching Node
+		# Traverse up the inheritance hierarchy until reaching Node
 		while node_class != 'Node' and count > 0:
 				
 			count = count - 1
