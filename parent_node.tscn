@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dybr47svvo4oe"]
+
+[ext_resource type="Script" path="res://addons/simple_event_system/simple_event_system.gd" id="1_pgo5i"]
+[ext_resource type="Resource" uid="uid://bpm88mx6n06pe" path="res://new_resource.tres" id="2_huece"]
+
+[node name="ParentNode" type="Node"]
+
+[node name="SimpleEventSystem" type="Node" parent="." node_paths=PackedStringArray("_node", "_callable_nodes")]
+script = ExtResource("1_pgo5i")
+global_event = ExtResource("2_huece")
+_node = NodePath("..")
+_type_name = "Node"
+_function_name = "can_process()"
+_show_raw_data = true
+_callable_nodes = [NodePath("../Node"), NodePath("../Node2"), NodePath("../Node3")]
+_callable_values = [["Node", "can_process()", []], ["Node", "set_display_folded(fold)", []], ["Node", "can_process()", []]]
+
+[node name="Node" type="Node" parent="."]
+
+[node name="Node2" type="Node" parent="."]
+
+[node name="Node3" type="Node" parent="."]
