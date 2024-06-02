@@ -41,11 +41,6 @@ var _refresh_time:= 0.0
 #endregion
 
 @export_group("Raw Data")
-@export var _show_raw_data:= false:
-	set(val):
-		_show_raw_data = val
-		notify_property_list_changed()
-
 @export var _callable_nodes: Array[Node]
 @export var _callable_values:= []
 

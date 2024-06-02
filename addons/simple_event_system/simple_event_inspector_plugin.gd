@@ -106,8 +106,6 @@ func _parse_property(object: Object, type: Variant.Type, name: String,
 			if target_class._function_name == '' or target_class._function_name == _get_function_missing_text():
 				_add_empty_space(30)
 				return true
-		elif name == '_callable_values' || name == '_callable_nodes':
-			return !target_class._show_raw_data
 		elif string_matches_any(name, strings_to_match):
 			return true
 
