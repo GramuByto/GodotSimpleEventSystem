@@ -62,7 +62,7 @@ func invoke():
 		_callable_nodes[index].callv(_callable_values[index][1].split('(')[0], new_args)
 		new_args.clear()
 	
-	#on_invoke.emit()
+	on_invoke.emit()
 
 func _ready():
 	if !Engine.is_editor_hint():	#Stop from processing when playing. Still works in editor but not on the window playing
