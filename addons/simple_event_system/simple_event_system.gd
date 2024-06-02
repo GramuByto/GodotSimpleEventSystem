@@ -3,6 +3,7 @@ extends Node
 class_name SimpleEventSystem
 
 #region Editor Variables
+@export var global_event: SimpleGlobalEventSystem
 
 @export var _node: Node:
 	set(val):
@@ -71,6 +72,8 @@ func _process(delta):
 	_refresh_time = 0
 
 	if !Engine.is_editor_hint():
+		if global_event != null:
+			global_event.event_systems.append(self)
 		process_mode = Node.PROCESS_MODE_DISABLED
 		return
 

@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="SimpleGlobalEventSystem" load_steps=2 format=3 uid="uid://bpm88mx6n06pe"]
+
+[ext_resource type="Script" path="res://addons/simple_event_system/simple_global_event_system.gd" id="1_xheoo"]
+
+[resource]
+script = ExtResource("1_xheoo")
