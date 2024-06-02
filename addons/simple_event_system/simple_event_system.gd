@@ -3,7 +3,6 @@ extends Node
 class_name SimpleEventSystem
 
 #region Editor Variables
-@export var global_event: SimpleGlobalEventSystem
 
 @export var _node: Node:
 	set(val):
@@ -40,9 +39,15 @@ var _refresh_time:= 0.0
 
 #endregion
 
+@export_group("Extra")
+@export var pre_invoked_event: SimpleEventSystem	#event gets called after pre_invoked_event is invoked
+@export var global_event: SimpleGlobalEventSystem
+
 @export_group("Raw Data")
 @export var _callable_nodes: Array[Node]
 @export var _callable_values:= []
+
+signal on_invoke
 
 func invoke():
 	var new_args : Array
@@ -56,6 +61,21 @@ func invoke():
 	
 		_callable_nodes[index].callv(_callable_values[index][1].split('(')[0], new_args)
 		new_args.clear()
+	
+	#on_invoke.emit()
+
+func _ready():
+	if !Engine.is_editor_hint():	#Stop from processing when playing. Still works in editor but not on the window playing
+		if global_event != null:
+			global_event.event_systems.append(self)
+		if pre_invoked_event != null:
+			if pre_invoked_event == self:
+				push_warning("Pre Invoke Event is Self")
+			else:
+				pre_invoked_event.on_invoke.connect(invoke)
+			
+		set_process(false)
+		set_physics_process(false)
 
 #region Editor Functions
 
@@ -65,12 +85,6 @@ func _process(delta):
 	if _refresh_time < _refresh_interval:	#Check for missing functions every 0.1s
 		return
 	_refresh_time = 0
-
-	if !Engine.is_editor_hint():
-		if global_event != null:
-			global_event.event_systems.append(self)
-		process_mode = Node.PROCESS_MODE_DISABLED
-		return
 
 	var has_changes = false;
 	
@@ -107,7 +121,6 @@ func _process(delta):
 
 		if sync_values:
 			_callable_values[_cur_index][2] = _args
-
 
 func _add_callable():
 	var callable = ['', '', []]
