@@ -8,12 +8,12 @@
 [node name="SimpleEventSystem" type="Node" parent="." node_paths=PackedStringArray("_node", "_callable_nodes")]
 script = ExtResource("1_pgo5i")
 global_event = ExtResource("2_huece")
-_node = NodePath("..")
+_node = NodePath("../Node3")
 _type_name = "Node"
-_function_name = "can_process()"
-_show_raw_data = true
-_callable_nodes = [NodePath("../Node"), NodePath("../Node2"), NodePath("../Node3")]
-_callable_values = [["Node", "can_process()", []], ["Node", "set_display_folded(fold)", []], ["Node", "can_process()", []]]
+_function_name = "rpc(method)"
+_args = [&""]
+_callable_nodes = [NodePath("../Node"), NodePath("../Node2"), NodePath("../Node3"), NodePath("../Node"), NodePath("../Node2"), NodePath("../Node3")]
+_callable_values = [["Node", "can_process()", [&""]], ["Node", "set_display_folded(fold)", []], ["Node", "can_process()", []], ["Node", "get_process_thread_group()", []], ["Node", "is_processing_shortcut_input()", []], ["Node", "rpc(method)", [&""]]]
 
 [node name="Node" type="Node" parent="."]
 
