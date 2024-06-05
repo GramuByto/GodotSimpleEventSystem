@@ -68,8 +68,10 @@ func _ready():
 	if !Engine.is_editor_hint():	#Stop from processing when playing. Still works in editor but not on the window playing
 		if global_event != null:
 			global_event.event_systems.append(self)
+			
 		if pre_invoked_event != null:
 			if pre_invoked_event == self:
+				print("Pre Invoke Event is Self")
 				push_warning("Pre Invoke Event is Self")
 			else:
 				pre_invoked_event.on_invoke.connect(invoke)

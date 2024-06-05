@@ -57,7 +57,6 @@ _node = NodePath("../../../../SkillSpawner")
 _type_name = "skill_spawner.gd"
 _function_name = "spawnNode(node,spawnPosition)"
 _args = [ExtResource("5_ohty8"), Vector3(0, 1.25, 0)]
-_show_raw_data = true
 _callable_nodes = [NodePath("../../../../SkillSpawner")]
 _callable_values = [["skill_spawner.gd", "spawnNode(node,spawnPosition)", [ExtResource("5_ohty8"), Vector3(0, 1.25, 0)]]]
 
@@ -74,7 +73,6 @@ _node = NodePath("../../../../SkillSpawner")
 _type_name = "skill_spawner.gd"
 _function_name = "spawnNode(node,spawnPosition)"
 _args = [ExtResource("6_a61tj"), Vector3(0, 1.25, 0)]
-_show_raw_data = true
 _callable_nodes = [NodePath("../../../../SkillSpawner")]
 _callable_values = [["skill_spawner.gd", "spawnNode(node,spawnPosition)", [ExtResource("6_a61tj"), Vector3(0, 1.25, 0)]]]
 
