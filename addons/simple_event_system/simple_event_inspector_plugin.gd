@@ -69,7 +69,6 @@ func _parse_property(object: Object, type: Variant.Type, name: String,
 					button.selected = cur_index
 					button.text = callable[0]
 				else:
-					callable[0] = _get_class_missing_text()
 					button.text = _get_class_missing_text()
 					target_class._type_name = _get_class_missing_text()
 			else:
@@ -96,7 +95,6 @@ func _parse_property(object: Object, type: Variant.Type, name: String,
 					button.selected = cur_index
 					button.text = callable[1]
 				else:
-					callable[1] = _get_function_missing_text()
 					button.text = _get_function_missing_text()
 					target_class._function_name = _get_function_missing_text()
 			else:

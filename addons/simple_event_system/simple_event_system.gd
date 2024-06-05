@@ -45,6 +45,8 @@ var _refresh_time:= 0.0
 
 @export_group("Raw Data")
 @export var _callable_nodes: Array[Node]
+@export var _callable_types: Array[String]
+@export var _callable_functions: Array[String]
 @export var _callable_values:= []
 
 signal on_invoke
@@ -52,7 +54,7 @@ signal on_invoke
 func invoke():
 	var new_args : Array
 
-	for index in range(_callable_values.size()):
+	for index in range(_callable_nodes.size()):
 		for arg in _callable_values[index][2]:
 			if typeof(arg) == TYPE_NODE_PATH:	#Changing NodePath into Node
 				new_args.append(get_node(arg))
