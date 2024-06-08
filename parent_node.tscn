@@ -9,11 +9,10 @@ script = ExtResource("1_pgo5i")
 _node = NodePath("../Node3")
 _type_name = "Node"
 _function_name = "_get_import_path()"
-_args = [false]
 _callable_nodes = [NodePath("../Node"), NodePath("../Node2"), NodePath("../Node3"), NodePath("../Node"), NodePath("../Node2"), NodePath("../Node3")]
 _callable_types = Array[String](["Node", "Node", "Node", "Node", "Node", "Node"])
 _callable_functions = Array[String](["is_processing_input()", "rpc(method)", "_get_import_path()", "can_process()", "set_process_internal(enable)", "is_processing()"])
-_callable_values = [[], [&""], [false], [], [false], []]
+_callable_values = [[], [&""], [], [], [false], []]
 
 [node name="Node" type="Node" parent="."]
 
