@@ -16,15 +16,21 @@ class_name SimpleEventSystem
 				editor_selection.add_node(self)	#reselect this _node
 
 		_node = val
-			
+
 @export var _type_name:String:
 	set(val):
-		_assign_callable_values(val, 0)
+		if _cur_index != -1:
+			if val != _callable_types[_cur_index]:
+				_callable_types[_cur_index] = val
+				notify_property_list_changed()
 		_type_name = val
 
 @export var _function_name:String:
 	set(val):
-		_assign_callable_values(val, 1)
+		if _cur_index != -1:
+			if val != _callable_functions[_cur_index]:
+				_callable_functions[_cur_index] = val
+				notify_property_list_changed()
 		_function_name = val
 
 @export var _args: Array:
@@ -55,13 +61,13 @@ func invoke():
 	var new_args : Array
 
 	for index in range(_callable_nodes.size()):
-		for arg in _callable_values[index][2]:
+		for arg in _callable_values[index]:
 			if typeof(arg) == TYPE_NODE_PATH:	#Changing NodePath into Node
 				new_args.append(get_node(arg))
 			else:
 				new_args.append(arg)
 	
-		_callable_nodes[index].callv(_callable_values[index][1].split('(')[0], new_args)
+		_callable_nodes[index].callv(_callable_functions[index].split('(')[0], new_args)
 		new_args.clear()
 	
 	on_invoke.emit()
@@ -94,7 +100,7 @@ func _process(delta):
 	
 	#Check for missing functions
 	for index in range(_callable_nodes.size()):
-		var temp_function = _callable_values[index][1]
+		var temp_function = _callable_functions[index]
 
 		#so that we don't have to get and read every function all the time
 		if temp_function == '!!!(Function Missing)!!!' or temp_function == '':
@@ -104,7 +110,7 @@ func _process(delta):
 		var temp_function_index = function_list.find(temp_function)
 
 		if temp_function_index == -1:
-			_callable_values[index][1] = '!!!(Function Missing)!!!'
+			_callable_functions[index] = '!!!(Function Missing)!!!'
 			has_changes = true
 	
 	if has_changes:
@@ -112,25 +118,30 @@ func _process(delta):
 
 	#change the selected _args
 	if _cur_index != -1:
-		var arr2:Array = _callable_values[_cur_index][2]
+		var arr2:Array = _callable_values[_cur_index]
 		var sync_values = false
 
 		if _args.size() != arr2.size():
 			sync_values = true
 		else:
 			for i in range(_args.size()):
+				if typeof(_args[i]) != typeof(arr2[i]):
+					sync_values = true
+					break
 				if _args[i] != arr2[i]:
 					sync_values = true
 					break
 
 		if sync_values:
-			_callable_values[_cur_index][2] = _args
+			_callable_values[_cur_index] = _args
 
 func _add_callable():
 	var callable = ['', '', []]
 	_callable_values.append(callable)
 	_callable_nodes.append(null)
-	_cur_index = len(_callable_values) - 1
+	_callable_types.append("")
+	_callable_functions.append("")
+	_cur_index = len(_callable_nodes) - 1
 	_node = null
 	_function_name = ''
 	notify_property_list_changed()
@@ -138,6 +149,8 @@ func _add_callable():
 
 func _delete_callable(index):
 	_callable_nodes.remove_at(index)
+	_callable_types.remove_at(index)
+	_callable_functions.remove_at(index)
 	_callable_values.remove_at(index)
 	_cur_index = -1
 	notify_property_list_changed()
@@ -146,31 +159,32 @@ func _delete_callable(index):
 func _select_callable(index):
 	_cur_index = index
 
-	if _cur_index != -1 and _cur_index < len(_callable_values):
-		var callable = _callable_values[index]
+	if _cur_index != -1 and _cur_index < len(_callable_nodes):
 		_node = _callable_nodes[index]
-		_type_name = callable[0]
-		_function_name = callable[1]
-		_args = callable[2]
+		_type_name = _callable_types[index]
+		_function_name = _callable_functions[index]
+		_args = _callable_values[index]
 		notify_property_list_changed()
 
 
 func _move_callable(index: int, up: bool):
-	var element = _callable_values[index]
 	var temp_node = _callable_nodes[index]
-	_callable_values.remove_at(index)
+	var temp_type = _callable_types[index]
+	var temp_function = _callable_functions[index]
+	var temp_args = _callable_values[index]
+
 	_callable_nodes.remove_at(index)
+	_callable_types.remove_at(index)
+	_callable_functions.remove_at(index)
+	_callable_values.remove_at(index)
+
 	_cur_index = index + (-1 if up else 1)
-	_callable_values.insert(_cur_index, element)
 	_callable_nodes.insert(_cur_index, temp_node)
+	_callable_types.insert(_cur_index, temp_type)
+	_callable_functions.insert(_cur_index, temp_function)
+	_callable_values.insert(_cur_index, temp_args)
+
 	notify_property_list_changed()
-
-
-func _assign_callable_values(val, index: int):
-	if _cur_index != -1:
-		if val != _callable_values[_cur_index][index]:
-			_callable_values[_cur_index][index] = val
-			notify_property_list_changed()
 
 
 func _update_parameters() -> void:
@@ -244,7 +258,7 @@ func _get_all_node_functions(callable_index:int) -> Array:
 	var function_list:= []
 
 	if callable_node != null:
-		var f_list = ClassDB.class_get_method_list(_callable_values[callable_index][0], true)
+		var f_list = ClassDB.class_get_method_list(_callable_types[callable_index], true)
 		var starting_index = 0
 		f_list.sort()
 

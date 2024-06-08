@@ -8,11 +8,12 @@ func _can_handle(object) -> bool:
 
 func _parse_property(object: Object, type: Variant.Type, name: String, 
 	hint_type: PropertyHint, hint_string: String, usage_flags, wide: bool):
-
+		
+	var strings_to_match = ['process_mode', 'process_priority', 'process_physics_priority', 'process_thread_group', 'script', '_refresh_interval']
 #region Legacy
 
 	var target_class = object as SimpleEvent
-	var strings_to_match = ['process_mode', 'process_priority', 'process_physics_priority', 'process_thread_group', 'script', '_refresh_interval']
+	
 	
 	if target_class != null:
 		if name == 'add_function_button':
@@ -39,6 +40,11 @@ func _parse_property(object: Object, type: Variant.Type, name: String,
 #endregion
 	target_class = object as SimpleEventSystem
 
+	var unhidable_variables = ['editor_description', 'global_event', 'pre_invoked_event']
+
+	if string_matches_any(name, unhidable_variables):
+		return false
+
 	if target_class != null:
 		var callable_index = target_class._cur_index
 
@@ -52,7 +58,7 @@ func _parse_property(object: Object, type: Variant.Type, name: String,
 			var type_list = target_class._get_all_node_types(callable_index)
 			
 			if type_list.size() != 0:
-				var callable = target_class._callable_values[callable_index]
+				var callable_type = target_class._callable_types[callable_index]
 				var button:= add_option_button()
 				var cur_index:= -1
 
@@ -62,12 +68,12 @@ func _parse_property(object: Object, type: Variant.Type, name: String,
 				for item_index in range(type_list.size()):
 					button.add_item(type_list[item_index])
 					if cur_index == -1:
-						if type_list[item_index] == callable[0]:
+						if type_list[item_index] == callable_type:
 							cur_index = item_index
 			
 				if cur_index != -1:
 					button.selected = cur_index
-					button.text = callable[0]
+					button.text = callable_type
 				else:
 					button.text = _get_class_missing_text()
 					target_class._type_name = _get_class_missing_text()
@@ -78,7 +84,7 @@ func _parse_property(object: Object, type: Variant.Type, name: String,
 			var function_list = target_class._get_all_node_functions(callable_index)
 	
 			if function_list.size() != 0:
-				var callable = target_class._callable_values[callable_index]
+				var callable_function = target_class._callable_functions[callable_index]
 				var button = add_option_button()
 				var cur_index:= -1
 
@@ -88,12 +94,12 @@ func _parse_property(object: Object, type: Variant.Type, name: String,
 				for item_index in range(function_list.size()):
 					button.add_item(function_list[item_index])
 					if cur_index == -1:
-						if function_list[item_index] == callable[1]:
+						if function_list[item_index] == callable_function:
 							cur_index = item_index
 		
 				if cur_index != -1:
 					button.selected = cur_index
-					button.text = callable[1]
+					button.text = callable_function
 				else:
 					button.text = _get_function_missing_text()
 					target_class._function_name = _get_function_missing_text()
@@ -147,76 +153,74 @@ func _parse_group(object, group):
 	var target_class = object as SimpleEventSystem
 
 	if group == 'Callables' and target_class != null:
-		var callables = target_class._callable_values
+		for index in range(target_class._callable_nodes.size()):
+			var hbox_container = HBoxContainer.new()
+			hbox_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			add_custom_control(hbox_container)
+					
+			var vbox_container = VBoxContainer.new()
+			var size = vbox_container.get_minimum_size()
+			size.x = 30
+			vbox_container.custom_minimum_size = size
+			hbox_container.add_child(vbox_container)
 
-		if callables != null:
-			var index: int = 0
-			for callable in callables:
-				var hbox_container = HBoxContainer.new()
-				hbox_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				add_custom_control(hbox_container)
-				
-				var vbox_container = VBoxContainer.new()
-				var size = vbox_container.get_minimum_size()
-				size.x = 30
-				vbox_container.custom_minimum_size = size
-				hbox_container.add_child(vbox_container)
+			var up_button = Button.new()
+			up_button.text = 'Λ'
 
-				var up_button = Button.new()
-				up_button.text = 'Λ'
+			if index == 0:
+				up_button.disabled = true
+			else:
+				up_button.modulate = Color(1.5, 1.5, 1.5)
+				up_button.button_down.connect(target_class._move_callable.bind(index, true))
+			vbox_container.add_child(up_button)
 
-				if index == 0:
-					up_button.disabled = true
-				else:
-					up_button.modulate = Color(1.5, 1.5, 1.5)
-					up_button.button_down.connect(target_class._move_callable.bind(index, true))
-				vbox_container.add_child(up_button)
+			var down_button = Button.new()
+			down_button.text = 'V'
+			if index + 1 == target_class._callable_nodes.size():
+				down_button.disabled = true
+			else:
+				down_button.modulate = Color(1.5, 1.5, 1.5)
+				down_button.button_down.connect(target_class._move_callable.bind(index, false))
+			vbox_container.add_child(down_button)
+					
+			var callable_button = Button.new()
+			var button_name = '<<SimpleEventCallable>>'
+			var callable_node = target_class._callable_nodes[index]
 
-				var down_button = Button.new()
-				down_button.text = 'V'
-				if index + 1 == target_class._callable_values.size():
-					down_button.disabled = true
-				else:
-					down_button.modulate = Color(1.5, 1.5, 1.5)
-					down_button.button_down.connect(target_class._move_callable.bind(index, false))
-				vbox_container.add_child(down_button)
-				
-				var callable_button = Button.new()
-				var button_name = '<<SimpleEventCallable>>'
-				var callable_node = target_class._callable_nodes[index]
+			if _verify_node(callable_node):
+				button_name = callable_node.name
 
-				if _verify_node(callable_node):
-					button_name = callable_node.name
-					if callable[0] != _get_class_missing_text():
-						button_name += '.' + callable[0] + '\n'
-						if callable[1] != _get_function_missing_text():
-							button_name += callable[1]
-						else:
-							button_name += _get_function_missing_text()
+				var callable_type = target_class._callable_types[index]
+				if callable_type != _get_class_missing_text():
+					button_name += '.' + callable_type + '\n'
+
+					var callable_function = target_class._callable_functions[index]
+					if callable_function != _get_function_missing_text():
+						button_name += callable_function
 					else:
-						button_name += '\n' + _get_class_missing_text()
+						button_name += _get_function_missing_text()
+				else:
+					button_name += '\n' + _get_class_missing_text()
 
-				callable_button.text = button_name	#Revise This
-				callable_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				callable_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
-				var col:= Color(1.5, 1.5, 1.5)
-				
-				if index == target_class._cur_index:
-					col = Color(1.75, 1.75, 1.25)
+			callable_button.text = button_name	#Revise This
+			callable_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			callable_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+			var col:= Color(1.5, 1.5, 1.5)
+					
+			if index == target_class._cur_index:
+				col = Color(1.75, 1.75, 1.25)
 
-				callable_button.modulate = col
+			callable_button.modulate = col
 
-				var delete_button = Button.new()
-				delete_button.text = 'X'
-				delete_button.modulate = Color(1.75, 1, 1)
-				delete_button.custom_minimum_size = Vector2(30, 0)
+			var delete_button = Button.new()
+			delete_button.text = 'X'
+			delete_button.modulate = Color(1.75, 1, 1)
+			delete_button.custom_minimum_size = Vector2(30, 0)
 
-				hbox_container.add_child(callable_button)
-				hbox_container.add_child(delete_button)
-				delete_button.button_down.connect(target_class._delete_callable.bind(index))
-				callable_button.button_down.connect(target_class._select_callable.bind(index))
-				
-				index += 1
+			hbox_container.add_child(callable_button)
+			hbox_container.add_child(delete_button)
+			delete_button.button_down.connect(target_class._delete_callable.bind(index))
+			callable_button.button_down.connect(target_class._select_callable.bind(index))
 
 func _verify_node(node: Node) -> bool:
 	if node != null:
