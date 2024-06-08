@@ -184,6 +184,7 @@ func _move_callable(index: int, up: bool):
 	_callable_functions.insert(_cur_index, temp_function)
 	_callable_values.insert(_cur_index, temp_args)
 
+	_select_callable(_cur_index)
 	notify_property_list_changed()
 
 
