@@ -1,8 +1,8 @@
 extends Node
 class_name HealthClass
 
-@export var OnTakeDamage: SimpleEventSystem
-@export var OnAddHealth: SimpleEventSystem
+@export var OnTakeDamage: SimpleEvent
+@export var OnAddHealth: SimpleEvent
 
 var health: int
 

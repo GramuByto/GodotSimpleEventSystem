@@ -1,8 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://cpe0y6x72ceih"]
-
-[ext_resource type="Script" path="res://demo/performance_demo/scripts/performance_demo.gd" id="1_y6c3k"]
-[ext_resource type="PackedScene" uid="uid://8c3p35jpkeab" path="res://demo/performance_demo/prefabs/node_demo.tscn" id="2_3sdue"]
-
-[node name="PerformanceDemo" type="Node"]
-script = ExtResource("1_y6c3k")
-to_spawn = ExtResource("2_3sdue")

@@ -1,13 +1,14 @@
-[gd_scene load_steps=16 format=3 uid="uid://dvr2val5qh6cl"]
+[gd_scene load_steps=21 format=3 uid="uid://dvr2val5qh6cl"]
 
 [ext_resource type="PackedScene" uid="uid://blthj6kwtmhb0" path="res://demo/skills_demo/target_dummy/target_dummy.glb" id="1_66n2e"]
-[ext_resource type="Script" path="res://demo/skills_demo/scripts/enemy_script.gd" id="2_ugnhl"]
+[ext_resource type="Script" uid="uid://bh2lj8cm3boii" path="res://demo/skills_demo/scripts/enemy_script.gd" id="2_ugnhl"]
 [ext_resource type="Material" uid="uid://6jgi1gmjq6ha" path="res://demo/skills_demo/target_dummy/target_dummy_mat.tres" id="3_2mwmx"]
-[ext_resource type="Script" path="res://demo/skills_demo/scripts/animation_script.gd" id="3_a0bgb"]
+[ext_resource type="Script" uid="uid://bv2xcqt7u0w3l" path="res://demo/skills_demo/scripts/animation_script.gd" id="3_a0bgb"]
 [ext_resource type="Theme" uid="uid://6d5cloc5p1o4" path="res://demo/skills_demo/sample_theme.tres" id="3_ay5m6"]
-[ext_resource type="Script" path="res://demo/skills_demo/scripts/health/health_script.gd" id="3_gysqa"]
-[ext_resource type="Script" path="res://demo/skills_demo/scripts/health/health_bar_script.gd" id="5_0knwe"]
-[ext_resource type="Script" path="res://addons/simple_event_system/simple_event_system.gd" id="5_f7dxk"]
+[ext_resource type="Script" uid="uid://bo54drjo0mlol" path="res://demo/skills_demo/scripts/health/health_script.gd" id="3_gysqa"]
+[ext_resource type="Script" uid="uid://etxmxc4oy37b" path="res://demo/skills_demo/scripts/health/health_bar_script.gd" id="5_0knwe"]
+[ext_resource type="Script" uid="uid://10rxnh7af5ua" path="res://addons/simple_event_system/simple_event.gd" id="8_ykob7"]
+[ext_resource type="Script" uid="uid://b1dclri154lwx" path="res://addons/simple_event_system/simple_event_data.gd" id="9_ng3m3"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_bju65"]
 animation = &"ARM_training_dummy|ARM_training_dummy|pushed|ARM_training_d"
@@ -35,6 +36,38 @@ nodes/hit/position = Vector2(100, 100)
 nodes/output/position = Vector2(300, 100)
 node_connections = [&"TimeScale", 0, &"Animation 2", &"TimeScale 2", 0, &"Animation", &"hit", 0, &"TimeScale", &"hit", 1, &"TimeScale 2", &"output", 0, &"hit"]
 
+[sub_resource type="Resource" id="Resource_ng3m3"]
+resource_name = "ProgressBar.update_health()"
+script = ExtResource("9_ng3m3")
+_node_path_target = NodePath("../../CanvasLayer/ProgressBar")
+_function_name = "health_bar_script.update_health()"
+_is_dynamic = false
+_args = []
+
+[sub_resource type="Resource" id="Resource_xvt4f"]
+resource_name = "AnimationPlayer.play_oneshot(parameter)"
+script = ExtResource("9_ng3m3")
+_node_path_target = NodePath("../../AnimationPlayer")
+_function_name = "animation_script.play_oneshot(parameter)"
+_is_dynamic = false
+_args = ["hit"]
+
+[sub_resource type="Resource" id="Resource_rtb6o"]
+resource_name = "ProgressBar.update_health()"
+script = ExtResource("9_ng3m3")
+_node_path_target = NodePath("../../CanvasLayer/ProgressBar")
+_function_name = "health_bar_script.update_health()"
+_is_dynamic = false
+_args = []
+
+[sub_resource type="Resource" id="Resource_n0t2j"]
+resource_name = "Health.set_health(val)"
+script = ExtResource("9_ng3m3")
+_node_path_target = NodePath("../Health")
+_function_name = "health_script.set_health(val)"
+_is_dynamic = false
+_args = [100]
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2wxqj"]
 
 [node name="target_dummy" node_paths=PackedStringArray("OnInitialize") instance=ExtResource("1_66n2e")]
@@ -45,6 +78,7 @@ OnInitialize = NodePath("OnInitialize")
 bones/2/rotation = Quaternion(-9.36322e-08, 6.88982e-08, 0.754922, 0.655815)
 bones/3/rotation = Quaternion(1.82941e-07, -6.00997e-08, -0.609704, 0.792629)
 bones/4/rotation = Quaternion(0.52607, 0.486621, 0.512002, -0.473608)
+bones/5/rotation = Quaternion(-0.096037, 0.00358584, 0.0372094, 0.994676)
 
 [node name="training_dummy" parent="ARM_training_dummy/Skeleton3D" index="0"]
 surface_material_override/0 = ExtResource("3_2mwmx")
@@ -83,30 +117,17 @@ script = ExtResource("3_gysqa")
 OnTakeDamage = NodePath("OnTakeDamage")
 OnAddHealth = NodePath("OnAddHealth")
 
-[node name="OnTakeDamage" type="Node" parent="Health" index="0" node_paths=PackedStringArray("_node", "_callable_nodes")]
-script = ExtResource("5_f7dxk")
-_node = NodePath("../../CanvasLayer/ProgressBar")
-_type_name = "health_bar_script.gd"
-_function_name = "update_health()"
-_callable_nodes = [NodePath("../../CanvasLayer/ProgressBar"), NodePath("../../AnimationPlayer")]
-_callable_values = [["health_bar_script.gd", "update_health()", []], ["animation_script.gd", "play_oneshot(parameter)", ["hit"]]]
+[node name="OnTakeDamage" type="Node" parent="Health" index="0"]
+script = ExtResource("8_ykob7")
+_events = Array[ExtResource("9_ng3m3")]([SubResource("Resource_ng3m3"), SubResource("Resource_xvt4f")])
 
-[node name="OnAddHealth" type="Node" parent="Health" index="1" node_paths=PackedStringArray("_node", "_callable_nodes")]
-script = ExtResource("5_f7dxk")
-_node = NodePath("../../CanvasLayer/ProgressBar")
-_type_name = "health_bar_script.gd"
-_function_name = "update_health()"
-_callable_nodes = [NodePath("../../CanvasLayer/ProgressBar")]
-_callable_values = [["health_bar_script.gd", "update_health()", []]]
+[node name="OnAddHealth" type="Node" parent="Health" index="1"]
+script = ExtResource("8_ykob7")
+_events = Array[ExtResource("9_ng3m3")]([SubResource("Resource_rtb6o")])
 
-[node name="OnInitialize" type="Node" parent="." index="4" node_paths=PackedStringArray("_node", "_callable_nodes")]
-script = ExtResource("5_f7dxk")
-_node = NodePath("../Health")
-_type_name = "health_script.gd"
-_function_name = "set_health(val)"
-_args = [100]
-_callable_nodes = [NodePath("../Health")]
-_callable_values = [["health_script.gd", "set_health(val)", [100]]]
+[node name="OnInitialize" type="Node" parent="." index="4"]
+script = ExtResource("8_ykob7")
+_events = Array[ExtResource("9_ng3m3")]([SubResource("Resource_n0t2j")])
 
 [node name="Area3D" type="Area3D" parent="." index="5" groups=["enemy"]]
 

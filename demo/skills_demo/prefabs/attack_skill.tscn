@@ -1,19 +1,31 @@
-[gd_scene load_steps=5 format=3 uid="uid://bl8t0fomcdxtu"]
+[gd_scene load_steps=8 format=3 uid="uid://bl8t0fomcdxtu"]
 
 [ext_resource type="PackedScene" uid="uid://c17jytfrt8vhk" path="res://demo/skills_demo/prefabs/skill.tscn" id="1_hrmq0"]
+[ext_resource type="Script" uid="uid://b1dclri154lwx" path="res://addons/simple_event_system/simple_event_data.gd" id="2_hmjbx"]
 [ext_resource type="AudioStream" uid="uid://1trepfapjvc7" path="res://demo/skills_demo/audio/Noise_Punch_006.wav" id="3_nmrt7"]
 [ext_resource type="PackedScene" uid="uid://dfl3gxe07ygj1" path="res://demo/skills_demo/vfx/hit_vfx.tscn" id="4_dh8oc"]
-[ext_resource type="Script" path="res://demo/skills_demo/scripts/skills/effects/damage_effect_script.gd" id="4_yuclr"]
+[ext_resource type="Script" uid="uid://bw4g1cf7r0j8w" path="res://demo/skills_demo/scripts/skills/effects/damage_effect_script.gd" id="4_yuclr"]
+
+[sub_resource type="Resource" id="Resource_6thx1"]
+resource_name = "SkillSFX.play(from_position)"
+script = ExtResource("2_hmjbx")
+_node_path_target = NodePath("../SkillSFX")
+_function_name = "AudioStreamPlayer.play(from_position)"
+_is_dynamic = false
+_args = [0.98]
+
+[sub_resource type="Resource" id="Resource_31a2y"]
+resource_name = "Vfx.restart(keep_seed)"
+script = ExtResource("2_hmjbx")
+_node_path_target = NodePath("../Vfx")
+_function_name = "GPUParticles3D.restart(keep_seed)"
+_is_dynamic = false
+_args = [false]
 
 [node name="AttackSkill" instance=ExtResource("1_hrmq0")]
 
-[node name="OnActivateSkill" parent="." index="0" node_paths=PackedStringArray("_node", "_callable_nodes")]
-_node = NodePath("../SkillSFX")
-_type_name = "AudioStreamPlayer"
-_function_name = "play(from_position)"
-_args = [0.98]
-_callable_nodes = [NodePath("../SkillSFX"), NodePath("../Vfx")]
-_callable_values = [["AudioStreamPlayer", "play(from_position)", [0.98]], ["GPUParticles3D", "restart()", []]]
+[node name="OnActivateSkill" parent="." index="0"]
+_events = Array[ExtResource("2_hmjbx")]([SubResource("Resource_6thx1"), SubResource("Resource_31a2y")])
 
 [node name="Vfx" parent="." index="1" instance=ExtResource("4_dh8oc")]
 

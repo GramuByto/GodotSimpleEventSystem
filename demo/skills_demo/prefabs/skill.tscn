@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c17jytfrt8vhk"]
 
-[ext_resource type="Script" path="res://demo/skills_demo/scripts/skills/skill_script.gd" id="1_qkjxg"]
-[ext_resource type="Script" path="res://addons/simple_event_system/simple_event_system.gd" id="2_kav2x"]
+[ext_resource type="Script" uid="uid://c8mosun07xcfv" path="res://demo/skills_demo/scripts/skills/skill_script.gd" id="1_qkjxg"]
+[ext_resource type="Script" uid="uid://10rxnh7af5ua" path="res://addons/simple_event_system/simple_event.gd" id="2_mbqji"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jyjnp"]
 
@@ -10,7 +10,7 @@ script = ExtResource("1_qkjxg")
 OnActivateSkill = NodePath("OnActivateSkill")
 
 [node name="OnActivateSkill" type="Node" parent="."]
-script = ExtResource("2_kav2x")
+script = ExtResource("2_mbqji")
 
 [node name="SkillSFX" type="AudioStreamPlayer" parent="."]
 
