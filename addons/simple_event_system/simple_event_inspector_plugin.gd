@@ -1,235 +1,170 @@
 extends EditorInspectorPlugin
 
-var InspectorToolButton = preload("simple_event_tool.gd")
-var AddButton = preload("simple_event_add_button.gd")
+const strings_to_match = ['process_mode', 'process_priority', 'process_physics_priority', 'process_thread_group', '_refresh_interval', 'physics_interpolation_mode']
+const unhidable_variables = ['editor_description', 'global_event', 'pre_invoked_event']
+var space_height
+
+func _init():
+	var display_scale = EditorInterface.get_editor_settings().get("interface/editor/display_scale")
+	space_height = 32	#option zero on display_scale
+
+	if display_scale == 1:
+		space_height = 24
+	elif display_scale > 2:
+		display_scale -= 2
+		space_height += (display_scale * 8)
 
 func _can_handle(object) -> bool:
 	return true
 
-func _parse_property(object: Object, type: Variant.Type, name: String, 
-	hint_type: PropertyHint, hint_string: String, usage_flags, wide: bool):
-
-#region Legacy
-
+func _parse_property(object: Object, type: Variant.Type, name: String, hint_type: PropertyHint, hint_string: String, usage_flags, wide: bool):
 	var target_class = object as SimpleEvent
-	var strings_to_match = ['process_mode', 'process_priority', 'process_physics_priority', 'process_thread_group', 'script', '_refresh_interval']
 	
 	if target_class != null:
-		if name == 'add_function_button':
-			add_custom_control(InspectorToolButton.new(object, 'Add Function'))
-			return true #Returning true removes the built-in editor for this property
-		if string_matches_any(name, strings_to_match):
-			return true;
-
-	target_class = object as SimpleEventFunction
-
-	if target_class != null:
-		if name == 'function_name':
-			add_custom_control(InspectorToolButton.new(object, target_class.function_name))
+		if _string_matches_any(name, strings_to_match):
 			return true
-		elif name == 'type_name':
-			add_custom_control(InspectorToolButton.new(object, "!!" + target_class.type_name))
-			return true
-		elif string_matches_any(name, strings_to_match):
-			return true;
-	
-	
-
-
-#endregion
-	target_class = object as SimpleEventSystem
-
-	if target_class != null:
-		var callable_index = target_class._cur_index
-
-		if callable_index == -1 and target_class._callable_nodes.size() != 0:
-			target_class._select_callable(0)
-
-		if callable_index == -1:
-			return true
-		
-		if name == '_type_name':
-			var type_list = target_class._get_all_node_types(callable_index)
-			
-			if type_list.size() != 0:
-				var callable = target_class._callable_values[callable_index]
-				var button:= add_option_button()
-				var cur_index:= -1
-
-				add_custom_control(button)
-				button.item_selected.connect(_on_type_change.bind(target_class, button))
-
-				for item_index in range(type_list.size()):
-					button.add_item(type_list[item_index])
-					if cur_index == -1:
-						if type_list[item_index] == callable[0]:
-							cur_index = item_index
-			
-				if cur_index != -1:
-					button.selected = cur_index
-					button.text = callable[0]
-				else:
-					callable[0] = _get_class_missing_text()
-					button.text = _get_class_missing_text()
-					target_class._type_name = _get_class_missing_text()
-			else:
-				_add_empty_space(30)
-			return true
-		elif name == '_function_name':
-			var function_list = target_class._get_all_node_functions(callable_index)
-	
-			if function_list.size() != 0:
-				var callable = target_class._callable_values[callable_index]
-				var button = add_option_button()
-				var cur_index:= -1
-
-				add_custom_control(button)
-				button.item_selected.connect(_on_function_change.bind(target_class, button))
-
-				for item_index in range(function_list.size()):
-					button.add_item(function_list[item_index])
-					if cur_index == -1:
-						if function_list[item_index] == callable[1]:
-							cur_index = item_index
-		
-				if cur_index != -1:
-					button.selected = cur_index
-					button.text = callable[1]
-				else:
-					callable[1] = _get_function_missing_text()
-					button.text = _get_function_missing_text()
-					target_class._function_name = _get_function_missing_text()
-			else:
-				_add_empty_space(30)
-			return true
-		elif name == '_args':
-			if target_class._function_name == '' or target_class._function_name == _get_function_missing_text():
-				_add_empty_space(30)
+		if name == '_signal_name':
+			if target_class._get_source() == null:
+				_add_panel_container(Color.AQUAMARINE)
 				return true
-		elif name == '_callable_values' || name == '_callable_nodes':
-			return !target_class._show_raw_data
-		elif string_matches_any(name, strings_to_match):
+
+			var label := Label.new()
+			label.text = 'Signal:    '
+			var hbox := HBoxContainer.new()
+			add_custom_control(hbox)
+			hbox.add_child(label)
+			_add_panel_container(Color.AQUAMARINE)
+
+			var button := OptionButton.new()
+			var signal_list = target_class._get_signal_list()
+			var is_found := false
+	
+			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+			button.allow_reselect = true
+			button.item_selected.connect(_on_signal_change.bind(target_class, button))
+
+			for item_index in range(signal_list.size()):
+				button.add_item(signal_list[item_index])
+		
+				if is_found:
+					continue
+
+				if signal_list[item_index] == target_class._signal_name:
+					button.selected = item_index
+					button.text = target_class._signal_name
+					is_found = true
+			
+			if !is_found:
+				button.text = _get_signal_missing_text()
+				target_class._signal_name = button.text
+
+			hbox.add_child(button)
 			return true
+		if name == '_signal_source_node_path':
+			if target_class._signal_source_resource != null:
+				target_class._signal_source_node_path = ''	#just in case
+				return true
+		if name == '_signal_source_resource':
+			if target_class._get_source_node() != null:
+				target_class._signal_source_resource = null	#just in case
+				return true
+
+	target_class = object as SimpleEventData
+
+	if _string_matches_any(name, unhidable_variables):
+		return false
+
+	if target_class != null:
+		if name == '_node_path_target':
+			var panel_height = space_height
+			_add_panel_container(Color.BEIGE)
+			return target_class._resource_target != null
+
+		if name == '_resource_target':
+			return target_class._get_node() != null
+
+		if target_class._get_target() == null:
+			if name == '_function_name':
+				return true	#Don't add space if it's type_name if no target yet
+			return _add_empty_space(space_height)
+
+		if name == "_function_name":
+			var type_list = target_class._get_all_node_types()
+			var option_button = OptionButton.new()
+			var target_function_name = target_class._get_function_name()
+			option_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			option_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+			option_button.text = _get_function_missing_text()
+			add_custom_control(option_button)
+
+			for type_name in type_list:
+				var popup = PopupMenu.new()
+				var f_list = target_class._get_all_node_functions(type_name)
+				var dot_index = type_name.rfind('.')	#For custom classes
+				popup.name = type_name
+
+				if dot_index != -1:
+					popup.name = type_name.substr(0, dot_index)
+
+				popup.index_pressed.connect(_on_function_name_change.bind(target_class, popup))
+				option_button.get_popup().add_submenu_node_item(popup.name, popup)
+
+				for function_name in f_list:
+					popup.add_item(function_name)
+
+					if function_name == target_function_name:
+						option_button.text = popup.name + "." + function_name
+
+			if option_button.text == _get_function_missing_text():
+				target_class._function_name = _get_function_missing_text()
+
+			return true
+		elif name == '_is_dynamic':
+			if target_class._function_name == '' or target_class._function_name == _get_function_missing_text() or target_class._args.size() == 0:
+				return _add_empty_space(space_height)
+		elif name == '_args':
+			if target_class._function_name == '' or target_class._function_name == _get_function_missing_text() or target_class._args.size() == 0 or target_class._is_dynamic:
+				return _add_empty_space(space_height)
 
 	return false
 
-func _add_empty_space(height: int):
+func _add_empty_space(height) -> bool:
 	var space := Container.new()
 	space.custom_minimum_size = Vector2(0, height)
 	add_custom_control(space)
+	return true
 
-func _on_type_change(index: int, obj: SimpleEventSystem, button: OptionButton):
-	obj._type_name = button.get_item_text(index)
+func _add_panel_container(panel_color: Color) -> PanelContainer:
+	var panel_container := PanelContainer.new()
+	panel_container.custom_minimum_size = Vector2(0, space_height / 2)
+	
+	add_custom_control(panel_container)
+	var cr := ColorRect.new()
+	cr.color = panel_color
+	panel_container.add_child(cr)
+	cr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var label := Label.new()
+	cr.add_child(label)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	return panel_container
 
-func _on_function_change(index: int, obj: SimpleEventSystem, button: OptionButton):
-	obj._function_name = button.get_item_text(index)
+func _on_signal_change(index: int, obj: SimpleEvent, button: OptionButton):
+	obj._signal_name = button.get_item_text(index)
+
+func _on_function_name_change(index: int, obj: SimpleEventData, popup: PopupMenu):
+	obj._function_name = popup.name + "." + popup.get_item_text(index)
 	obj._update_parameters()
 
-func add_option_button() -> OptionButton:
-	var button := OptionButton.new()
-	button.size_flags_horizontal = Control.SIZE_FILL
-	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
-	button.allow_reselect = true
-	return button
-
-func string_matches_any(name: String, strings_to_match) -> bool:
+func _string_matches_any(name: String, strings_to_match) -> bool:
 	for option in strings_to_match:
 		if name == option:
 			return true
 	return false
 
-func _parse_category(object, category):
-	var target_class = object as SimpleEventSystem
-
-	if category == 'simple_event_system.gd' and target_class != null:
-		add_custom_control(AddButton.new(target_class._add_callable))
-
-		if target_class._cur_index == -1:
-			_add_empty_space(136)
-
-func _parse_group(object, group):
-	var target_class = object as SimpleEventSystem
-
-	if group == 'Callables' and target_class != null:
-		var callables = target_class._callable_values
-
-		if callables != null:
-			var index: int = 0
-			for callable in callables:
-				var hbox_container = HBoxContainer.new()
-				hbox_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				add_custom_control(hbox_container)
-				
-				var vbox_container = VBoxContainer.new()
-				var size = vbox_container.get_minimum_size()
-				size.x = 30
-				vbox_container.custom_minimum_size = size
-				hbox_container.add_child(vbox_container)
-
-				var up_button = Button.new()
-				up_button.text = 'Λ'
-
-				if index == 0:
-					up_button.disabled = true
-				else:
-					up_button.modulate = Color(1.5, 1.5, 1.5)
-					up_button.button_down.connect(target_class._move_callable.bind(index, true))
-				vbox_container.add_child(up_button)
-
-				var down_button = Button.new()
-				down_button.text = 'V'
-				if index + 1 == target_class._callable_values.size():
-					down_button.disabled = true
-				else:
-					down_button.modulate = Color(1.5, 1.5, 1.5)
-					down_button.button_down.connect(target_class._move_callable.bind(index, false))
-				vbox_container.add_child(down_button)
-				
-				var callable_button = Button.new()
-				var button_name = '<<SimpleEventCallable>>'
-				var callable_node = target_class._callable_nodes[index]
-
-				if _verify_node(callable_node):
-					button_name = callable_node.name
-					if callable[0] != _get_class_missing_text():
-						button_name += '.' + callable[0] + '\n'
-						if callable[1] != _get_function_missing_text():
-							button_name += callable[1]
-						else:
-							button_name += _get_function_missing_text()
-					else:
-						button_name += '\n' + _get_class_missing_text()
-
-				callable_button.text = button_name	#Revise This
-				callable_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				callable_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
-				var col:= Color(1.5, 1.5, 1.5)
-				
-				if index == target_class._cur_index:
-					col = Color(1.75, 1.75, 1.25)
-
-				callable_button.modulate = col
-
-				var delete_button = Button.new()
-				delete_button.text = 'X'
-				delete_button.modulate = Color(1.75, 1, 1)
-				delete_button.custom_minimum_size = Vector2(30, 0)
-
-				hbox_container.add_child(callable_button)
-				hbox_container.add_child(delete_button)
-				delete_button.button_down.connect(target_class._delete_callable.bind(index))
-				callable_button.button_down.connect(target_class._select_callable.bind(index))
-				
-				index += 1
-
-func _verify_node(node: Node) -> bool:
-	if node != null:
-		if node.is_inside_tree():
-			return true
-	return false
-
-func _get_class_missing_text() -> String:
-	return '!!!(Class Missing)!!!'
+func _get_signal_missing_text() -> String:
+	return '!!!(Signal Missing)!!!'
 
 func _get_function_missing_text() -> String:
 	return '!!!(Function Missing)!!!'

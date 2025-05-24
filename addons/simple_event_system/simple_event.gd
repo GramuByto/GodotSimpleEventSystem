@@ -1,100 +1,144 @@
 @tool
-
 extends Node
 class_name SimpleEvent
 
-enum NAMING_FORMAT {METHOD_ONLY, SCRIPT, NODE}
-
-var text: RichTextLabel
-
-@export var namingFormat: NAMING_FORMAT = NAMING_FORMAT.SCRIPT:
+@export var _signal_source_node_path: NodePath:
 	set(val):
-		namingFormat = val
-		update_all_name_format()
+		_signal_source_node_path = val
 		notify_property_list_changed()
+
+@export var _signal_source_resource: Resource:
+	set(val):
+		_signal_source_resource = val
+		notify_property_list_changed()
+
+@export var _signal_name: String:
+	set(val):
+		_signal_name = val
+		notify_property_list_changed()
+
+@export var _events: Array[SimpleEventData]:
+	set(val):
+		_events = val
 		
-@export var add_function_button: String	#This will be replaced by a button
+		for i in range(val.size()):
+			if _events[i] == null:
+				_events[i] = SimpleEventData.new()
+				#_events[i].resource_local_to_scene = true	#I think this is not needed but just in case.
 
-@export_subgroup("Extra Properties")
-@export var refresh_time: float = 0
-
-func invoke():
-	for child in get_children():
-		(child as SimpleEventFunction).invoke()
+var _refresh_time := 0.0
+var _default_instance := SimpleEventData #No class other than this is going to use this at runtime, right?
 
 func _init():
-	self.set_display_folded(true);
+	set_process(Engine.is_editor_hint())	
 
-#Check if functions still exists
-func _process(delta):
-	refresh_time += delta
+func _enter_tree() -> void:
+	if _has_signal():
+		_get_source().connect(_get_signal_name(), invoke)
+
+func _exit_tree() -> void:
+	if _has_signal():
+		_get_source().disconnect(_get_signal_name(), invoke)
+
+func _has_signal() -> bool:
+	if Engine.is_editor_hint():
+		return false
+
+	if _get_source() == null:
+		return false
 	
-	if refresh_time < 0.1:
-		return
-	refresh_time = 0
+	return _get_source().has_signal(_get_signal_name())
 
-	if !Engine.is_editor_hint():
-		process_mode = Node.PROCESS_MODE_DISABLED
-		return
-	
-	var has_changes = false;
-	
-	for child in get_children():
-		var event = (child as SimpleEventFunction)
-		var does_node_exist = event.node != null
+func invoke(arg0 = _default_instance, arg1 = _default_instance, arg2 = _default_instance, arg3 = _default_instance, arg4 = _default_instance, arg5 = _default_instance, arg6 = _default_instance, arg7 = _default_instance):
+	var args := [arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7]
+	var dynamic_args: Array
+	_assign_parent_node()
 
-		if does_node_exist:
-			does_node_exist = event.node.is_inside_tree()
-
-		if !does_node_exist:
-			if(!event.name.contains('<<<')):
-				event.name = '<<<SimpleEventFunction>>>'
-				has_changes = true
-			continue
-			
-		var function_index = event.get_all_node_functions().find(event.function_name)
+	for arg in args:
+		if typeof(arg) == typeof(_default_instance):
+			if arg == _default_instance:
+				continue	#Append
 		
-		if(event.name.contains('!!!')):
-			if(function_index != -1):
-				update_name_format(event)
-				has_changes = true
+		dynamic_args.append(arg)
+
+	for event in _events:
+		var target = event._get_target()
+
+		if target == null:
+			continue
+
+		if event._is_dynamic:
+			args = dynamic_args
 		else:
-			if(function_index == -1):
-				event.name = '!!!(Function Missing)!!!'
-				has_changes = true
-				
+			args = []
+		
+			for arg in event._args:
+				if typeof(arg) == TYPE_NODE_PATH:	#Changing NodePath into Node
+					args.append(get_node(arg))
+				else:
+					args.append(arg)
+
+		target.callv(event._get_function_name().split('(')[0], args)
+
+func _process(delta: float) -> void:
+	_refresh_time += delta
+	if _refresh_time < 0.25:	#Check for missing functions every 0.25s
+		return
+	_refresh_time = 0
+
+	var has_changes := false
+	_assign_parent_node()
+
+	for event in _events:
+		if event == null:
+			continue
+
+		if event.resource_name == 'SimpleEventData' || event.resource_name == '':
+			event._update_resource_name()
+		
+		if event._check_existing_function():
+			has_changes = true
+
 	if has_changes:
 		notify_property_list_changed()
 
-func update_name_format(child):
-	var cur_name = child.function_name
-	
-	if(child.node == null):
-		return
+func _get_signal_list() -> Array[String]:
+	if _get_source() == null:
+		return []
+
+	var signal_list: Array[String] = []
+	var source_signals = _get_source().get_signal_list()
+
+	for signal_item in source_signals:
+		var signal_text = signal_item['name'] + '('
+		var args = signal_item['args']
+
+		for arg in args:
+			signal_text = signal_text + arg['name'] + ','
 		
-	if namingFormat != NAMING_FORMAT.METHOD_ONLY:
-		match namingFormat:
-			NAMING_FORMAT.SCRIPT:
-				var script_assigned = child.node.get_script()
-				var title = str(child.node.get_class())
+		if args.size() != 0:
+			signal_text = signal_text.rstrip(signal_text[-1])
 
-				if script_assigned != null:
-					title = script_assigned.get_path().split('/')[-1]
+		signal_text = signal_text + ')'
+		signal_list.append(signal_text)
+		
+	return signal_list
 
-				cur_name = title + '->' + cur_name
-			NAMING_FORMAT.NODE:
-				cur_name = child.node.name + '->' + cur_name
-	
-	child.name = cur_name
+func _get_source():
+	var node = _get_source_node() 
+	if node != null:
+		return node
+	if _signal_source_resource != null:
+		return _signal_source_resource
+	return null
 
-func display_text():
-	if text != null:
-		if OS.has_feature("editor"):
-			text.text = "editor"
-			text.text = String.num(Engine.get_frames_per_second())
-		else:
-			set_process(false)
+func _get_signal_name():
+	return _signal_name.split('(')[0]
 
-func update_all_name_format():
-	for child in get_children():
-		update_name_format(child)
+func _get_source_node():
+	return get_node_or_null(_signal_source_node_path) 
+
+func _assign_parent_node():
+	for i in range(_events.size()):
+		if _events[i]._parent_node != self:
+			_events[i]._parent_node = self
