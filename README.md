@@ -12,9 +12,11 @@ Add a child node and search for SimpleEvent (Searching `event` will also work). 
 
 # Adding Events
 Select the `Events` array and add a new element.
+
 ![image](https://github.com/user-attachments/assets/1024e85b-b087-4fad-944d-d3d38b338c9f)
 
 You can reference any Nodes or Resources. It will show all the functions on that reference. Select the function
+
 ![image](https://github.com/user-attachments/assets/8b86031f-7776-4588-b5ba-40e54b18a1ae)
 
 The arguments will show up once a function is selected. Select the `Args` array to edit the values (It is advisable to refrain from adding or deleting a new element). The types in the array will change if the functions have static typing as their parameter.
@@ -65,3 +67,4 @@ Running the function is the same as the new version
 
 # Limitations
 - Any changes in the Events array from the parent node will not reflect properly on the child node should another event is added/removed on the child node. If you accidentally did add/remove a new event, you can discard those changes to reapply the parent references.
+- You cannot change the child node's argument values. Should you wish to, do not advised, go to the parent node and then to the resource category of the event you wish. Check the `Local to Scene` boolean and save the node. Should any changes happen on the child node, you will no longer be able to change the said event arguments of the parent node.
