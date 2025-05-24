@@ -9,6 +9,3 @@ func _on_area_entered(area:Area3D):
 		for node in nodes:
 			if str(node.get_script()) == str(HealthClass):
 				node.take_damage(damage)
-
-func _process(delta):
-	print(350238059)

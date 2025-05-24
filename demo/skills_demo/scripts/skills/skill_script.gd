@@ -8,6 +8,3 @@ func _ready():
 
 func activate_skill():
 	OnActivateSkill.invoke()
-
-func _process(delta: float) -> void:
-	print(53525)

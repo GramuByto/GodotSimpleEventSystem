@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c17jytfrt8vhk" path="res://demo/skills_demo/prefabs/skill.tscn" id="1_j4pnd"]
 [ext_resource type="AudioStream" uid="uid://bhqweo3nat5jf" path="res://demo/skills_demo/audio/UIMisc_Feedback 36 up_CB Sounddesign_ACTIVATION2.wav" id="2_644ak"]
-[ext_resource type="Script" uid="uid://b1dclri154lwx" path="res://addons/simple_event_system/simple_event_data.gd" id="2_gc43a"]
+[ext_resource type="Script" path="res://addons/simple_event_system/simple_event_data.gd" id="2_gc43a"]
 [ext_resource type="PackedScene" uid="uid://b4pvsugi213uw" path="res://demo/skills_demo/vfx/heal_vfx.tscn" id="4_gpjq8"]
 [ext_resource type="Script" uid="uid://ci57ttnm1hfn1" path="res://demo/skills_demo/scripts/skills/effects/health_effect_script.gd" id="4_k7gsq"]
 
