@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://dvr2val5qh6cl" path="res://demo/skills_demo/prefabs/target_dummy.tscn" id="1_e8eti"]
 [ext_resource type="Script" uid="uid://cgai6y2bowghf" path="res://demo/skills_demo/scripts/skills/skill_spawner.gd" id="2_2nox1"]
 [ext_resource type="Script" uid="uid://10rxnh7af5ua" path="res://addons/simple_event_system/simple_event.gd" id="3_mpdkv"]
-[ext_resource type="Script" path="res://addons/simple_event_system/simple_event_data.gd" id="4_ltuyi"]
+[ext_resource type="Script" uid="uid://b1dclri154lwx" path="res://addons/simple_event_system/simple_event_data.gd" id="4_ltuyi"]
 [ext_resource type="PackedScene" uid="uid://bl8t0fomcdxtu" path="res://demo/skills_demo/prefabs/attack_skill.tscn" id="5_ohty8"]
 [ext_resource type="PackedScene" uid="uid://vjuunvs5l6kn" path="res://demo/skills_demo/prefabs/heal_skill.tscn" id="6_a61tj"]
 [ext_resource type="PackedScene" uid="uid://tsehej47jakl" path="res://demo/skills_demo/prefabs/fire_skill.tscn" id="7_m0pwm"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://bl8t0fomcdxtu"]
 
 [ext_resource type="PackedScene" uid="uid://c17jytfrt8vhk" path="res://demo/skills_demo/prefabs/skill.tscn" id="1_hrmq0"]
-[ext_resource type="Script" path="res://addons/simple_event_system/simple_event_data.gd" id="2_hmjbx"]
+[ext_resource type="Script" uid="uid://b1dclri154lwx" path="res://addons/simple_event_system/simple_event_data.gd" id="2_hmjbx"]
 [ext_resource type="AudioStream" uid="uid://1trepfapjvc7" path="res://demo/skills_demo/audio/Noise_Punch_006.wav" id="3_nmrt7"]
 [ext_resource type="PackedScene" uid="uid://dfl3gxe07ygj1" path="res://demo/skills_demo/vfx/hit_vfx.tscn" id="4_dh8oc"]
 [ext_resource type="Script" uid="uid://bw4g1cf7r0j8w" path="res://demo/skills_demo/scripts/skills/effects/damage_effect_script.gd" id="4_yuclr"]
