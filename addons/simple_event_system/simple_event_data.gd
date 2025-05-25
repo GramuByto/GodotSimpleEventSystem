@@ -128,7 +128,7 @@ func _get_all_node_functions(type_name: String) -> Array:
 	if _get_target() != null:
 		var f_list = ClassDB.class_get_method_list(type_name, true)	#Get Node Functions
 		var starting_index = 0
-		f_list.sort()
+		f_list.sort_custom(_sort_by_name)
 
 		if f_list.size() == 0:	#To only get the class functions
 			f_list = _get_target().get_method_list()
@@ -174,6 +174,9 @@ func _get_all_node_types() -> Array:
 			node_class = ClassDB.get_parent_class(node_class)
 
 	return inherited_classes
+
+func _sort_by_name(a, b):
+	return a['name'] < b['name']  # Ascending order
 
 func _get_type_name() -> String:
 	return _function_name.split('.')[0]

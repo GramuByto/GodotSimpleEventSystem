@@ -24,7 +24,6 @@ class_name SimpleEvent
 		for i in range(val.size()):
 			if _events[i] == null:
 				_events[i] = SimpleEventData.new()
-				#_events[i].resource_local_to_scene = true	#I think this is not needed but just in case.
 
 var _refresh_time := 0.0
 var _default_instance := SimpleEventData #No class other than this is going to use this at runtime, right?
