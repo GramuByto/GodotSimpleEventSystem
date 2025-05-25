@@ -15,7 +15,7 @@ Select the `Events` array and add a new element.
 
 ![image](https://github.com/user-attachments/assets/1024e85b-b087-4fad-944d-d3d38b338c9f)
 
-You can reference any Nodes or Resources. It will show all the functions on that reference. Select the function
+You can reference any Nodes or Resources. It will show all the functions on that reference that you'll be able to select.
 
 ![image](https://github.com/user-attachments/assets/8b86031f-7776-4588-b5ba-40e54b18a1ae)
 
@@ -23,16 +23,17 @@ The arguments will show up once a function is selected. Select the `Args` array 
 
 ![image](https://github.com/user-attachments/assets/e60daf53-e5c5-4708-a9a3-9a203c840718)
 
-Checking the `Is Dynamic` boolean will make the function dynamic and hide the `Args` array from the inspector. When the function is dynamic, it will take the value that is passed on the function or signal called.
+Checking the `Is Dynamic` boolean will make the function dynamic and hide the `Args` array from the inspector. Dynamic functions will take the value that is passed on the function or signal called instead of the values in the Args array.
 
 ![image](https://github.com/user-attachments/assets/dade42b8-fa3f-4b27-bb1d-564f746bc963)
 
-# Calling Events
+# Calling Events via Invoke
 Invoking will call all of the events in order from top to bottom. You can call them through script by creating a variable exported as SimpleEvent. Using the `invoke()` function, you can pass all the values in the arguments should you wish to make use of dynamic functions.
 
 ![image](https://github.com/user-attachments/assets/7cced1e3-9ebd-45d5-bcd4-46a5c192101e)
 
-To use signals instead, reference any Nodes or Resources from the inspector.
+# Calling Events via Signals
+Reference any Nodes or Resources from the inspector.
 
 ![image](https://github.com/user-attachments/assets/abd6edf3-3acc-4f33-b790-3273fdf8e744)
 
@@ -67,4 +68,4 @@ Running the function is the same as the new version
 
 # Limitations
 - Any changes in the Events array from the parent node will not reflect properly on the child node should another event is added/removed on the child node. If you accidentally did add/remove a new event, you can discard those changes to reapply the parent references.
-- You cannot change the child node's argument values. Should you wish to, do not advised, go to the parent node and then to the resource category of the event you wish. Check the `Local to Scene` boolean and save the node. Should any changes happen on the child node, you will no longer be able to change the said event arguments of the parent node.
+- You cannot change the child node's argument values. Should you wish to, though not advised, go to the parent node and then to the resource category of the event you wish. Check the `Local to Scene` boolean and save the node. Should any changes happen on the child node, you will no longer be able to change the said event arguments of the parent node.
