@@ -156,25 +156,6 @@ func _get_all_node_functions(type_name: String) -> Array:
 
 	return function_list
 
-func _get_all_node_types() -> Array:
-	var inherited_classes:= []
-
-	if _node_path_target != null:
-		var script = _get_target().get_script()
-		var node_class = _get_target().get_class()
-		var count = 25	#To not get stuck in a while loop. I doubt there are scripts that will reach this much inheriting, right?
-
-		if script != null:
-			var paths = script.get_path().split('/')
-			inherited_classes.append(paths[paths.size() - 1])
-		
-		while node_class != '' and count > 0:
-			count -= 1
-			inherited_classes.append(node_class)
-			node_class = ClassDB.get_parent_class(node_class)
-
-	return inherited_classes
-
 func _sort_by_name(a, b):
 	return a['name'] < b['name']  # Ascending order
 

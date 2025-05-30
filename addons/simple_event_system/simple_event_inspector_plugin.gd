@@ -35,31 +35,44 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
 			hbox.add_child(label)
 			_add_panel_container(Color.AQUAMARINE)
 
-			var button := OptionButton.new()
-			var signal_list = target_class._get_signal_list()
-			var is_found := false
-	
-			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			button.alignment = HORIZONTAL_ALIGNMENT_CENTER
-			button.allow_reselect = true
-			button.item_selected.connect(_on_signal_change.bind(target_class, button))
+			var option_button := OptionButton.new()
+			var type_list = _get_all_node_types(target_class._get_source())
+			option_button.text = _get_signal_missing_text()
+			option_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			option_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 
-			for item_index in range(signal_list.size()):
-				button.add_item(signal_list[item_index])
-		
-				if is_found:
+			for type_name in type_list:
+				var signal_list = ClassDB.class_get_signal_list(type_name, true)
+
+				if signal_list.size() == 0:
 					continue
 
-				if signal_list[item_index] == target_class._signal_name:
-					button.selected = item_index
-					button.text = target_class._signal_name
-					is_found = true
-			
-			if !is_found:
-				button.text = _get_signal_missing_text()
-				target_class._signal_name = button.text
+				var popup = PopupMenu.new()
+				popup.name = type_name
+				popup.index_pressed.connect(_on_signal_change.bind(target_class, popup))
+				option_button.get_popup().add_submenu_node_item(popup.name, popup)
 
-			hbox.add_child(button)
+				for signal_item in signal_list:
+					var signal_text = signal_item['name'] + '('
+					var args = signal_item['args']
+
+					for arg in args:
+						signal_text = signal_text + arg['name'] + ','
+
+					if args.size() != 0:
+						signal_text = signal_text.rstrip(signal_text[-1])
+
+					signal_text = signal_text + ')'
+
+					popup.add_item(signal_text)
+
+					if signal_text == target_class._signal_name:
+						option_button.text = target_class._signal_name
+
+			if option_button.text == _get_signal_missing_text():
+				target_class._signal_name = _get_signal_missing_text()
+
+			hbox.add_child(option_button)
 			return true
 		if name == '_signal_source_node_path':
 			if target_class._signal_source_resource != null:
@@ -90,7 +103,7 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
 			return _add_empty_space(space_height)
 
 		if name == "_function_name":
-			var type_list = target_class._get_all_node_types()
+			var type_list = _get_all_node_types(target_class._get_target())
 			var option_button = OptionButton.new()
 			var target_function_name = target_class._get_function_name()
 			option_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -129,6 +142,25 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
 
 	return false
 
+func _get_all_node_types(target) -> Array:
+	var inherited_classes:= []
+
+	if target != null:
+		var script = target.get_script()
+		var node_class = target.get_class()
+		var count = 25	#To not get stuck in a while loop. I doubt there are scripts that will reach this much inheriting, right?
+
+		if script != null:
+			var paths = script.get_path().split('/')
+			inherited_classes.append(paths[paths.size() - 1])
+		
+		while node_class != '' and count > 0:
+			count -= 1
+			inherited_classes.append(node_class)
+			node_class = ClassDB.get_parent_class(node_class)
+
+	return inherited_classes
+
 func _add_empty_space(height) -> bool:
 	var space := Container.new()
 	space.custom_minimum_size = Vector2(0, height)
@@ -150,8 +182,8 @@ func _add_panel_container(panel_color: Color) -> PanelContainer:
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	return panel_container
 
-func _on_signal_change(index: int, obj: SimpleEvent, button: OptionButton):
-	obj._signal_name = button.get_item_text(index)
+func _on_signal_change(index: int, obj: SimpleEvent, popup: PopupMenu):
+	obj._signal_name = popup.get_item_text(index)
 
 func _on_function_name_change(index: int, obj: SimpleEventData, popup: PopupMenu):
 	obj._function_name = popup.name + "." + popup.get_item_text(index)

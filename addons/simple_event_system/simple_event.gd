@@ -101,28 +101,6 @@ func _process(delta: float) -> void:
 	if has_changes:
 		notify_property_list_changed()
 
-func _get_signal_list() -> Array[String]:
-	if _get_source() == null:
-		return []
-
-	var signal_list: Array[String] = []
-	var source_signals = _get_source().get_signal_list()
-
-	for signal_item in source_signals:
-		var signal_text = signal_item['name'] + '('
-		var args = signal_item['args']
-
-		for arg in args:
-			signal_text = signal_text + arg['name'] + ','
-		
-		if args.size() != 0:
-			signal_text = signal_text.rstrip(signal_text[-1])
-
-		signal_text = signal_text + ')'
-		signal_list.append(signal_text)
-		
-	return signal_list
-
 func _get_source():
 	var node = _get_source_node() 
 	if node != null:
