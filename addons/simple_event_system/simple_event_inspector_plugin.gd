@@ -37,12 +37,16 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
 
 			var option_button := OptionButton.new()
 			var type_list = _get_all_node_types(target_class._get_source())
+			var temp_signal_list = target_class._get_source().get_signal_list()
 			option_button.text = _get_signal_missing_text()
 			option_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			option_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 			for type_name in type_list:
-				var signal_list = ClassDB.class_get_signal_list(type_name, true)
+				var signal_list = temp_signal_list	#What will be left are the custom classes
+
+				if not '.' in type_name:
+					signal_list = ClassDB.class_get_signal_list(type_name, true)	#This doesn't work for custom classes
 
 				if signal_list.size() == 0:
 					continue
@@ -68,6 +72,11 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
 
 					if signal_text == target_class._signal_name:
 						option_button.text = target_class._signal_name
+
+					for temp_signal in temp_signal_list:
+						if temp_signal['name'] == signal_item['name']:
+							temp_signal_list.erase(temp_signal)	#From all signals, erase all signals from built-in classes
+							break
 
 			if option_button.text == _get_signal_missing_text():
 				target_class._signal_name = _get_signal_missing_text()
@@ -105,7 +114,6 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
 		if name == "_function_name":
 			var type_list = _get_all_node_types(target_class._get_target())
 			var option_button = OptionButton.new()
-			var target_function_name = target_class._get_function_name()
 			option_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			option_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 			option_button.text = _get_function_missing_text()
@@ -126,7 +134,7 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
 				for function_name in f_list:
 					popup.add_item(function_name)
 
-					if function_name == target_function_name:
+					if function_name == target_class._get_function_name():
 						option_button.text = popup.name + "." + function_name
 
 			if option_button.text == _get_function_missing_text():
@@ -152,11 +160,11 @@ func _get_all_node_types(target) -> Array:
 
 		if script != null:
 			var paths = script.get_path().split('/')
-			inherited_classes.append(paths[paths.size() - 1])
+			inherited_classes.insert(0, paths[paths.size() - 1])
 		
 		while node_class != '' and count > 0:
 			count -= 1
-			inherited_classes.append(node_class)
+			inherited_classes.insert(0, node_class)
 			node_class = ClassDB.get_parent_class(node_class)
 
 	return inherited_classes
