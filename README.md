@@ -39,7 +39,7 @@ Reference any Nodes or Resources from the inspector.
 
 The list of signals will show up once a reference is assigned. Select the signal you wish to use for the events to be called.
 
-![image](https://github.com/user-attachments/assets/47eef6a2-175e-4098-8824-c5800891365e)
+![image](https://github.com/user-attachments/assets/0cdf89e1-503a-4d32-852f-04d959290416)
 
 
 ---
