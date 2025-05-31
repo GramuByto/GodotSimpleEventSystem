@@ -1,7 +1,7 @@
 extends Node
 class_name SkillScript
 
-@export var OnActivateSkill: SimpleEventSystem
+@export var OnActivateSkill: SimpleEvent
 
 func _ready():
 	activate_skill()

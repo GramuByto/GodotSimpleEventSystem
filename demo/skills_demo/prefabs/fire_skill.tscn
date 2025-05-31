@@ -1,19 +1,31 @@
-[gd_scene load_steps=5 format=3 uid="uid://tsehej47jakl"]
+[gd_scene load_steps=8 format=3 uid="uid://tsehej47jakl"]
 
 [ext_resource type="PackedScene" uid="uid://c17jytfrt8vhk" path="res://demo/skills_demo/prefabs/skill.tscn" id="1_w8wb4"]
 [ext_resource type="AudioStream" uid="uid://d2eyu72mam1a2" path="res://demo/skills_demo/audio/EXPLReal_Medium Realistic Explosion 15_DDUMAIS_NONE.wav" id="2_42sbt"]
+[ext_resource type="Script" uid="uid://b1dclri154lwx" path="res://addons/simple_event_system/simple_event_data.gd" id="2_o0ci0"]
 [ext_resource type="PackedScene" uid="uid://barh3htdhsw5n" path="res://demo/skills_demo/vfx/fire_hit_vfx.tscn" id="3_peu8n"]
-[ext_resource type="Script" path="res://demo/skills_demo/scripts/skills/effects/damage_effect_script.gd" id="4_o1lor"]
+[ext_resource type="Script" uid="uid://bw4g1cf7r0j8w" path="res://demo/skills_demo/scripts/skills/effects/damage_effect_script.gd" id="4_o1lor"]
+
+[sub_resource type="Resource" id="Resource_cmbb0"]
+resource_name = "SkillSFX.play(from_position)"
+script = ExtResource("2_o0ci0")
+_node_path_target = NodePath("../SkillSFX")
+_function_name = "AudioStreamPlayer.play(from_position)"
+_is_dynamic = false
+_args = [0.0]
+
+[sub_resource type="Resource" id="Resource_40s7r"]
+resource_name = "Vfx.restart(keep_seed)"
+script = ExtResource("2_o0ci0")
+_node_path_target = NodePath("../Vfx")
+_function_name = "GPUParticles3D.restart(keep_seed)"
+_is_dynamic = false
+_args = [true]
 
 [node name="FireSkill" instance=ExtResource("1_w8wb4")]
 
-[node name="OnActivateSkill" parent="." index="0" node_paths=PackedStringArray("_node", "_callable_nodes")]
-_node = NodePath("../SkillSFX")
-_type_name = "AudioStreamPlayer"
-_function_name = "play(from_position)"
-_args = [0.0]
-_callable_nodes = [NodePath("../SkillSFX"), NodePath("../Vfx")]
-_callable_values = [["AudioStreamPlayer", "play(from_position)", [0.0]], ["GPUParticles3D", "restart()", []]]
+[node name="OnActivateSkill" parent="." index="0"]
+_events = Array[ExtResource("2_o0ci0")]([SubResource("Resource_cmbb0"), SubResource("Resource_40s7r")])
 
 [node name="Vfx" parent="." index="1" instance=ExtResource("3_peu8n")]
 
