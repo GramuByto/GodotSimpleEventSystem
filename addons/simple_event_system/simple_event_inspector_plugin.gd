@@ -43,7 +43,7 @@ func _parse_property(object: Object, type: Variant.Type, name: String, hint_type
 			option_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 			for type_name in type_list:
-				var signal_list = temp_signal_list	#What will be left are the custom classes
+				var signal_list = temp_signal_list.duplicate()	#What will be left are the custom classes
 
 				if not '.' in type_name:
 					signal_list = ClassDB.class_get_signal_list(type_name, true)	#This doesn't work for custom classes
@@ -204,7 +204,7 @@ func _string_matches_any(name: String, strings_to_match) -> bool:
 	return false
 
 func _get_signal_missing_text() -> String:
-	return '!!!(Signal Missing)!!!'
+	return '!!! Signal Missing !!!'
 
 func _get_function_missing_text() -> String:
-	return '!!!(Function Missing)!!!'
+	return '!!! Function Missing !!!'
