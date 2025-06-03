@@ -68,13 +68,13 @@ func _get_node():
 	return _parent_node.get_node_or_null(_node_path_target)	#This is the only reason why I need the parent node
 
 func _check_existing_function() -> bool:
-	if _function_name == '!!!(Function Missing)!!!' or _function_name == '':
+	if _function_name == '!!! Function Missing !!!' or _function_name == '':
 		return false
 
 	var f_list = _get_all_node_functions(_get_type_name())
 
 	if f_list.find(_get_function_name()) == -1:
-		_function_name = '!!!(Function Missing)!!!'
+		_function_name = '!!! Function Missing !!!'
 		return true
 	
 	return false
